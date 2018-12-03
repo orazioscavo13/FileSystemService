@@ -5,12 +5,12 @@
  */
 package com.mycompany;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import javax.ejb.Stateless;
 
 /**
- *
- * @author orazio
+ * 
+ * @author Orazio & Alessandro
  */
 @Stateless
 public class DirectoryBean implements DirectoryBeanLocal {
@@ -23,9 +23,9 @@ public class DirectoryBean implements DirectoryBeanLocal {
      * @return List of all the directories in the FileSyistem
      */
     @Override
-    public ArrayList<Directory> getDirectories(){
-        ArrayList<Directory> directories;
-        directories = new ArrayList<Directory>();
+    public LinkedList<Directory> getDirectories(){
+        LinkedList<Directory> directories;
+        directories = new LinkedList<Directory>();
         directories.add(new Directory("Cartellabella"));
         directories.add(new Directory("Cartellabrutta"));
         return directories;

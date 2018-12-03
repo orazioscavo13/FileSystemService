@@ -5,17 +5,17 @@
  */
 package com.mycompany;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import javax.ejb.Local;
 
 /**
- *
- * @author orazio
+ * 
+ * @author Orazio & Alessandro
  */
 @Local
 public interface DirectoryBeanLocal {
     
-    public ArrayList<Directory> getDirectories();
+    public LinkedList<Directory> getDirectories();
     
     
 }

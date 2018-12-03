@@ -7,7 +7,7 @@ package com.mycompany;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.core.Context;
@@ -27,8 +27,8 @@ import javax.ws.rs.core.MediaType;
 
 /**
  * REST Web Service
- *
- * @author orazio
+ * 
+ * @author Orazio & Alessandro
  */
 @Path("directory")
 @RequestScoped
@@ -49,12 +49,12 @@ public class FileSystemResource {
 
     /**
      * Retrieves representation of an instance of com.mycompany.FileSystemResource
-     * @return an instance of java.lang.String
+     * @return Json Object containing the list of directories in the filesystem
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public JsonObject getJson() {
-        ArrayList<Directory> directories = directoryBean.getDirectories();
+        LinkedList<Directory> directories = directoryBean.getDirectories();
         //TODO return proper representation object
         //throw new UnsupportedOperationException();
         ObjectMapper mapper = new ObjectMapper();
