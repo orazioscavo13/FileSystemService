@@ -5,6 +5,7 @@
  */
 package com.mycompany;
 
+import java.io.File;
 import java.util.LinkedList;
 import javax.ejb.Local;
 
@@ -15,7 +16,20 @@ import javax.ejb.Local;
 @Local
 public interface DirectoryBeanLocal {
     
-    public LinkedList<Directory> getDirectories();
+    public String createDirectory(String path);
     
+    public LinkedList<Directory> getDirectories(String path);
+    
+    public LinkedList<MyFile> getFiles(String path);
+    
+    public String deleteDirectory(String path);
+    
+    public String createFile(String path, String name, File newFile);
+    
+    public File getFile(String path);
+
+    public String updateFile(String path, String name, File newFile);
+    
+    public String deleteFile(String path);    
     
 }
