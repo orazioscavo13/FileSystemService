@@ -7,7 +7,12 @@ package com.mycompany;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.LinkedList;
@@ -29,6 +34,8 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 /**
  * REST Web Service
@@ -126,16 +133,52 @@ public class FileSystemResource {
 
     /**
      * POST method for upload a new file in a directory
+     * @param fileInputStream
+     * @param fileDetail
+     * @param destination
      * @return string containing the outcome of the operation
      */
     @POST
     @Path("files")
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.TEXT_PLAIN)
-    public String uploadFile(@FormParam("destination") String destination, @FormParam("file") Part file) {
-        final String fileName = getFileName(file);
-        return directoryBean.uploadFile(destination, fileName, file);
+    public String uploadFile(
+    	@FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileMetaData,
+        @FormDataParam("destination") String destination){
+        //TODO: Spostare in ejb ed interpretare parametro path (al momento è statico)
+        String UPLOAD_PATH;
+        UPLOAD_PATH = "../FileSystemService/";
+        int read = 0;
+        byte[] bytes = new byte[1024];
+
+        OutputStream out = null;
+        try {
+            out = new FileOutputStream(new File(UPLOAD_PATH + fileMetaData.getFileName()));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(FileSystemResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            while ((read = fileInputStream.read(bytes)) != -1)
+            {
+                out.write(bytes, 0, read);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(FileSystemResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            out.flush();
+        } catch (IOException ex) {
+            Logger.getLogger(FileSystemResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            out.close();
+        } catch (IOException ex) {
+            Logger.getLogger(FileSystemResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "ciao";
     }
+    
     
      /**
      * GET method which retrieves the list of the files in the specified directory
@@ -183,16 +226,22 @@ public class FileSystemResource {
     
     /**
      * POST method for update a file in a directory
+     * @param uploadedInputStream
+     * @param fileDetail
+     * @param destination
+     * @param file
      * @return string containing the outcome of the operation
      */
-    @PUT
+    /*@PUT
     @Path("files")
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.TEXT_PLAIN)
-    public String updateFile(@FormParam("destination") String destination, @FormParam("file") Part file) {
-        final String fileName = getFileName(file);
-        return directoryBean.updateFile(destination, fileName, file);
-    }
+    public String updateFile(
+    	@FormDataParam("file") InputStream uploadedInputStream,
+	@FormDataParam("file") FormDataContentDisposition fileDetail,
+        @FormDataParam("destination") String destination) {
+        return directoryBean.uploadFile(destination, fileDetail.getFileName() , uploadedInputStream);
+    }*/
     
     /**
      * DELETE method for deleting a file
@@ -205,17 +254,6 @@ public class FileSystemResource {
     public String deleteFile(@PathParam("path") String path) {
         return directoryBean.deleteFile(path);
     }
-    
-    private String getFileName(final Part part) {
-    final String partHeader = part.getHeader("content-disposition");
-    for (String content : part.getHeader("content-disposition").split(";")) {
-        if (content.trim().startsWith("filename")) {
-            return content.substring(
-                    content.indexOf('=') + 1).trim().replace("\"", "");
-        }
-    }
-    return null;
-}
     
     
 }

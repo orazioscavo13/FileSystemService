@@ -38,6 +38,21 @@
             <version>7.0</version>
             <scope>provided</scope>
         </dependency>
+        
+        <!-- Jersey core Servlet 2.x implementation -->
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet-core</artifactId>
+            <version>2.12</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- Jersey Multipart entity providers support module -->
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-multipart</artifactId>
+            <version>2.12</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

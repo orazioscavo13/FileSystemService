@@ -6,8 +6,10 @@
 package com.mycompany;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.LinkedList;
 import javax.ejb.Local;
+import javax.servlet.http.Part;
 
 /**
  * 
@@ -24,11 +26,11 @@ public interface DirectoryBeanLocal {
     
     public String deleteDirectory(String path);
     
-    public String createFile(String path, String name, File newFile);
+    public String uploadFile(String path, String fileName, InputStream uploadedInputStream);
     
     public File getFile(String path);
 
-    public String updateFile(String path, String name, File newFile);
+    public String updateFile(String path, String name, InputStream uploadedInputStream);
     
     public String deleteFile(String path);    
     
