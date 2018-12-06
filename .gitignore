@@ -1,0 +1,18 @@
+# Directories #
+build/
+bin/
+target/
+libs/
+tmp/
+node_modules/
+
+######################
+# NetBeans
+######################
+nbproject/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
