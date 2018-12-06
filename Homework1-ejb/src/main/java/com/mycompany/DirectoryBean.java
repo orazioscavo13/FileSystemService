@@ -174,36 +174,34 @@ public class DirectoryBean implements DirectoryBeanLocal {
      */
 
     @Override
-    public String uploadFile(String path, String fileName, InputStream uploadedInputStream) {
-        //path = UrlToPath(path);
-
-	String uploadedFileLocation = "/home/orazio/scavodomain/FileSystemService" + fileName;
-        //save it
-	writeToFile(uploadedInputStream, uploadedFileLocation);
-        return "{\"success\": true";
-
-        
+    public String uploadFile(InputStream fileInputStream, String filename, String destination) {
+       String path = "../FileSystemService/" + UrlToPath(destination) + "/" + filename;
+        if(!Files.exists(Paths.get(path)))
+        return simpleFileUpload(fileInputStream, path);
+        else return "{\"success\": false, \"message\": \"Esiste già un file con questo nome!\"";
+    }    
+    
+    private String simpleFileUpload(InputStream fileInputStream, String path){
+        try {
+            int read = 0;
+            byte[] bytes = new byte[1024];
+            
+            OutputStream out = null;
+            out = new FileOutputStream(new File(path));
+            while ((read = fileInputStream.read(bytes)) != -1){
+                out.write(bytes, 0, read);
+            }
+            out.flush();
+            out.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(DirectoryBean.class.getName()).log(Level.SEVERE, null, ex);
+            return "{\"success\": false, \"message\": \"Errore nel caricamento del file!\"";
+        } catch (IOException ex) {
+            Logger.getLogger(DirectoryBean.class.getName()).log(Level.SEVERE, null, ex);
+            return "{\"success\": false, \"message\": \"Errore nella lettura del file!\"";
+        }
+        return "{\"success\": true}";
     }
-    
-    // save uploaded file to new location
-    private void writeToFile(InputStream uploadedInputStream,String uploadedFileLocation) {
-	try {
-	OutputStream out = new FileOutputStream(new File(uploadedFileLocation));
-    	int read = 0;
-	byte[] bytes = new byte[1024];
-        out = new FileOutputStream(new File(uploadedFileLocation));
-	while ((read = uploadedInputStream.read(bytes)) != -1) {
-            out.write(bytes, 0, read);
-	}
-	out.flush();
-	out.close();
-	} catch (IOException e) {
-            e.printStackTrace();
-	}
-
-	}
-
-    
 
     @Override
     public File getFile(String path) {
@@ -211,8 +209,11 @@ public class DirectoryBean implements DirectoryBeanLocal {
     }
 
     @Override
-    public String updateFile(String path, String name, InputStream uploadedInputStream) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String updateFile(InputStream fileInputStream, String filename, String destination) {
+        String path = "../FileSystemService/" + UrlToPath(destination) + "/" + filename;
+        if(Files.exists(Paths.get(path)))
+        return simpleFileUpload(fileInputStream, path);
+        else return "{\"success\": false, \"message\": \"Non esiste un file con questo nome!\"";
     }
     
     /**

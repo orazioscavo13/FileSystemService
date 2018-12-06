@@ -26,11 +26,11 @@ public interface DirectoryBeanLocal {
     
     public String deleteDirectory(String path);
     
-    public String uploadFile(String path, String fileName, InputStream uploadedInputStream);
+    public String uploadFile(InputStream fileInputStream, String filename, String destination);
     
     public File getFile(String path);
 
-    public String updateFile(String path, String name, InputStream uploadedInputStream);
+    public String updateFile(InputStream fileInputStream, String filename, String destination);
     
     public String deleteFile(String path);    
     

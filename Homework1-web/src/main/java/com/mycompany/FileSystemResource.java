@@ -147,36 +147,7 @@ public class FileSystemResource {
         @FormDataParam("file") FormDataContentDisposition fileMetaData,
         @FormDataParam("destination") String destination){
         //TODO: Spostare in ejb ed interpretare parametro path (al momento è statico)
-        String UPLOAD_PATH;
-        UPLOAD_PATH = "../FileSystemService/";
-        int read = 0;
-        byte[] bytes = new byte[1024];
-
-        OutputStream out = null;
-        try {
-            out = new FileOutputStream(new File(UPLOAD_PATH + fileMetaData.getFileName()));
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(FileSystemResource.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            while ((read = fileInputStream.read(bytes)) != -1)
-            {
-                out.write(bytes, 0, read);
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(FileSystemResource.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            out.flush();
-        } catch (IOException ex) {
-            Logger.getLogger(FileSystemResource.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            out.close();
-        } catch (IOException ex) {
-            Logger.getLogger(FileSystemResource.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return "ciao";
+        return directoryBean.uploadFile(fileInputStream, fileMetaData.getFileName(), destination);
     }
     
     
@@ -232,16 +203,17 @@ public class FileSystemResource {
      * @param file
      * @return string containing the outcome of the operation
      */
-    /*@PUT
+    @PUT
     @Path("files")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.TEXT_PLAIN)
     public String updateFile(
-    	@FormDataParam("file") InputStream uploadedInputStream,
-	@FormDataParam("file") FormDataContentDisposition fileDetail,
-        @FormDataParam("destination") String destination) {
-        return directoryBean.uploadFile(destination, fileDetail.getFileName() , uploadedInputStream);
-    }*/
+    	@FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileMetaData,
+        @FormDataParam("destination") String destination){
+        //TODO: Spostare in ejb ed interpretare parametro path (al momento è statico)
+        return directoryBean.updateFile(fileInputStream, fileMetaData.getFileName(), destination);
+    }
     
     /**
      * DELETE method for deleting a file
