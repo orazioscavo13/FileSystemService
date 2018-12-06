@@ -6,11 +6,8 @@
 package com.mycompany;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.LinkedList;
@@ -24,11 +21,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PUT;
 import javax.enterprise.context.RequestScoped;
-import javax.json.Json;
-import javax.json.JsonArray;
-import javax.json.JsonObject;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.servlet.http.Part;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
@@ -45,8 +40,6 @@ import javax.ws.rs.core.MediaType;
 public class FileSystemResource {
 
     com.mycompany.DirectoryBeanLocal directoryBean = lookupDirectoryBeanLocal();
-
-    
     
     @Context
     private UriInfo context;
@@ -62,6 +55,9 @@ public class FileSystemResource {
         }
     }
     
+    /**
+     * EJB lookupDirectoryBeanLocal
+     */
     private DirectoryBeanLocal lookupDirectoryBeanLocal() {
         try {
             javax.naming.Context c = new InitialContext();
@@ -72,6 +68,9 @@ public class FileSystemResource {
         }
     }
     
+    
+    /* === DIRECTORIES REST === */
+
     /**
      * POST method for creating a new directory in the specified path
      * @param path the path of the new directory with '*' instead of '/'
@@ -85,9 +84,8 @@ public class FileSystemResource {
         return directoryBean.createDirectory(path);
     }
 
-
     /**
-     * Retrieves the list of the directories in the specified directory
+     * GET method which retrieves the list of the directories in the specified directory
      * @param path path of the directory with '*' instead of '/' (just '*' for the root directory)
      * @return Json Object containing the list of directories in the specified directory
      */
@@ -112,9 +110,35 @@ public class FileSystemResource {
     }
     
     /**
-     * Retrieves the list of files in the specified directory
-     * 
-     * @param path path of the directory with '*' instead of '/' (just '*' for the root directory)
+     * DELETE method for deleting a directory
+     * @param path the path of the directory with '*' instead of '/'
+     * @return string containing the outcome of the operation
+     */
+    @DELETE
+    @Produces(MediaType.TEXT_PLAIN)
+    @Path("directories/{path}")
+    public String deleteDirectory(@PathParam("path") String path) {
+        return directoryBean.deleteDirectory(path);
+    }
+
+    
+    /* === FILES REST === */
+
+    /**
+     * POST method for upload a new file in a directory
+     * @return string containing the outcome of the operation
+     */
+    @POST
+    @Path("files")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String uploadFile(@FormParam("destination") String destination, @FormParam("file") Part file) {
+        final String fileName = getFileName(file);
+        return directoryBean.uploadFile(destination, fileName, file);
+    }
+    
+     /**
+     * GET method which retrieves the list of the files in the specified directory
      * @return Json Object containing the list of files in the specified directory
      */
     @GET
@@ -136,15 +160,38 @@ public class FileSystemResource {
     }
     
     /**
-     * DELETE method for deleting a directory
-     * @param path the path of the directory with '*' instead of '/'
+     * GET method which retrieves a specified file
+     * @return Json Object containing the list of files in the specified directory
+     */
+    @GET
+    @Path("files/download/{path}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getFile(@PathParam("path") String path) {
+        /*
+        LinkedList<MyFile> files = directoryBean.getFiles(path);
+        ObjectMapper mapper = new ObjectMapper();
+        
+        try {
+            String stringifiedFiles = mapper.writeValueAsString(files);
+            //TODO: utilizzare un metodo di serializzazione/deserializzazione migliore
+            return "{\"success\": true, \"files\":" + stringifiedFiles + "}"; 
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(FileSystemResource.class.getName()).log(Level.SEVERE, null, ex);
+        }*/ 
+        return "{\"success\": false}";
+    }
+    
+    /**
+     * POST method for update a file in a directory
      * @return string containing the outcome of the operation
      */
-    @DELETE
+    @PUT
+    @Path("files")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
-    @Path("directories/{path}")
-    public String deleteDirectory(@PathParam("path") String path) {
-        return directoryBean.deleteDirectory(path);
+    public String updateFile(@FormParam("destination") String destination, @FormParam("file") Part file) {
+        final String fileName = getFileName(file);
+        return directoryBean.updateFile(destination, fileName, file);
     }
     
     /**
@@ -158,5 +205,17 @@ public class FileSystemResource {
     public String deleteFile(@PathParam("path") String path) {
         return directoryBean.deleteFile(path);
     }
+    
+    private String getFileName(final Part part) {
+    final String partHeader = part.getHeader("content-disposition");
+    for (String content : part.getHeader("content-disposition").split(";")) {
+        if (content.trim().startsWith("filename")) {
+            return content.substring(
+                    content.indexOf('=') + 1).trim().replace("\"", "");
+        }
+    }
+    return null;
+}
+    
     
 }
