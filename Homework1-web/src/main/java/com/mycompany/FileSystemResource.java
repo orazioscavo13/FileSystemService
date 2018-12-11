@@ -33,7 +33,10 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -179,20 +182,9 @@ public class FileSystemResource {
      */
     @GET
     @Path("files/download/{path}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getFile(@PathParam("path") String path) {
-        /*
-        LinkedList<MyFile> files = directoryBean.getFiles(path);
-        ObjectMapper mapper = new ObjectMapper();
-        
-        try {
-            String stringifiedFiles = mapper.writeValueAsString(files);
-            //TODO: utilizzare un metodo di serializzazione/deserializzazione migliore
-            return "{\"success\": true, \"files\":" + stringifiedFiles + "}"; 
-        } catch (JsonProcessingException ex) {
-            Logger.getLogger(FileSystemResource.class.getName()).log(Level.SEVERE, null, ex);
-        }*/ 
-        return "{\"success\": false}";
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response getFile(@PathParam("path") String path) {
+        return directoryBean.getFile(path);
     }
     
     /**

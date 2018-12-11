@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.util.LinkedList;
 import javax.ejb.Local;
 import javax.servlet.http.Part;
+import javax.ws.rs.core.Response;
 
 /**
  * 
@@ -28,7 +29,7 @@ public interface DirectoryBeanLocal {
     
     public String uploadFile(InputStream fileInputStream, String filename, String destination);
     
-    public File getFile(String path);
+    public Response getFile(String path);
 
     public String updateFile(InputStream fileInputStream, String filename, String destination);
     

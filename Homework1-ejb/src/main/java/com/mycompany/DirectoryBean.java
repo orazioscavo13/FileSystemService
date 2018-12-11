@@ -26,6 +26,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.servlet.http.Part;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 
 /**
  * 
@@ -204,8 +208,30 @@ public class DirectoryBean implements DirectoryBeanLocal {
     }
 
     @Override
-    public File getFile(String path) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Response getFile(String path) {
+        StreamingOutput fileStream;
+        fileStream = new StreamingOutput(){
+            String tmpPath = "../FileSystemService/" + UrlToPath(path);
+            @Override
+            public void write(java.io.OutputStream output) throws IOException, WebApplicationException
+            {
+                try
+                {
+                    java.nio.file.Path path = Paths.get(tmpPath);
+                    byte[] data = Files.readAllBytes(path);
+                    output.write(data);
+                    output.flush();
+                }
+                catch (Exception e)
+                {
+                    throw new WebApplicationException("File Not Found !!");
+                }
+            }
+        };
+        return Response
+                .ok(fileStream, MediaType.APPLICATION_OCTET_STREAM)
+                .header("content-disposition","attachment; filename = myfile.pdf")
+                .build();
     }
 
     @Override
