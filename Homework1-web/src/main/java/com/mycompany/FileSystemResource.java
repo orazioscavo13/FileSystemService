@@ -7,12 +7,8 @@ package com.mycompany;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.LinkedList;
@@ -28,15 +24,12 @@ import javax.ws.rs.PUT;
 import javax.enterprise.context.RequestScoped;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.servlet.http.Part;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -49,6 +42,9 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 @RequestScoped
 public class FileSystemResource {
 
+    private final String basePath = "../FileSystemService/";
+
+    
     com.mycompany.DirectoryBeanLocal directoryBean = lookupDirectoryBeanLocal();
     
     @Context
@@ -59,7 +55,7 @@ public class FileSystemResource {
      */
     public FileSystemResource() {
         try {
-            Files.createDirectories(Paths.get("../FileSystemService"));
+            Files.createDirectories(Paths.get(basePath));
         } catch (IOException ex) {
             Logger.getLogger(DirectoryBean.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -93,32 +89,7 @@ public class FileSystemResource {
     public String createDirectory(@FormParam("path") String path) {
         return directoryBean.createDirectory(path);
     }
-
-    /**
-     * GET method which retrieves the list of the directories in the specified directory
-     * @param path path of the directory with '*' instead of '/' (just '*' for the root directory)
-     * @return Json Object containing the list of directories in the specified directory
-     */
-    @GET
-    @Path("directories/{path}")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getDirectories(@PathParam("path") String path) {
-        
-        LinkedList<Directory> directories = directoryBean.getDirectories(path);
-        //TODO return proper representation object
-        //throw new UnsupportedOperationException();
-        ObjectMapper mapper = new ObjectMapper();
-        
-        try {
-            String stringifiedDirectories = mapper.writeValueAsString(directories);
-            //TODO: utilizzare un metodo di serializzazione/deserializzazione migliore
-            return "{\"success\": true, \"directories\":" + stringifiedDirectories + "}"; 
-        } catch (JsonProcessingException ex) {
-            Logger.getLogger(FileSystemResource.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return "{\"success\": false}";
-    }
-    
+     
     /**
      * DELETE method for deleting a directory
      * @param path the path of the directory with '*' instead of '/'
@@ -130,33 +101,47 @@ public class FileSystemResource {
     public String deleteDirectory(@PathParam("path") String path) {
         return directoryBean.deleteDirectory(path);
     }
+    
+    /**
+     * GET method which retrieves the list of the directories in the specified directory
+     * @param path path of the directory with '*' instead of '/' (just '*' for the root directory)
+     * @return String containing the list of directories in the specified directory
+     */
+    @GET
+    @Path("directories/{path}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getDirectories(@PathParam("path") String path) {
+        
+        LinkedList<Directory> directories = directoryBean.getDirectories(path);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            String stringifiedDirectories = mapper.writeValueAsString(directories);
+            return "{\"success\": true, \"directories\":" + stringifiedDirectories + "}"; 
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(FileSystemResource.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "{\"success\": false}";
+    }
 
     
     /* === FILES REST === */
-
+     
     /**
-     * POST method for upload a new file in a directory
-     * @param fileInputStream
-     * @param fileDetail
-     * @param destination
+     * DELETE method for deleting a file
+     * @param path the path of the file with '*' instead of '/'
      * @return string containing the outcome of the operation
      */
-    @POST
-    @Path("files")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @DELETE
     @Produces(MediaType.TEXT_PLAIN)
-    public String uploadFile(
-    	@FormDataParam("file") InputStream fileInputStream,
-        @FormDataParam("file") FormDataContentDisposition fileMetaData,
-        @FormDataParam("destination") String destination){
-        //TODO: Spostare in ejb ed interpretare parametro path (al momento è statico)
-        return directoryBean.uploadFile(fileInputStream, fileMetaData.getFileName(), destination);
+    @Path("files/{path}")
+    public String deleteFile(@PathParam("path") String path) {
+        return directoryBean.deleteFile(path);
     }
     
-    
-     /**
+    /**
      * GET method which retrieves the list of the files in the specified directory
-     * @return Json Object containing the list of files in the specified directory
+     * @param path path of the directory with '*' instead of '/'
+     * @return String containing the list of files in the specified directory
      */
     @GET
     @Path("files/{path}")
@@ -178,7 +163,8 @@ public class FileSystemResource {
     
     /**
      * GET method which retrieves a specified file
-     * @return Json Object containing the list of files in the specified directory
+     * @param path path of the requested file with '*' instead of '/'
+     * @return the requested file
      */
     @GET
     @Path("files/download/{path}")
@@ -188,12 +174,11 @@ public class FileSystemResource {
     }
     
     /**
-     * POST method for update a file in a directory
-     * @param uploadedInputStream
-     * @param fileDetail
-     * @param destination
-     * @param file
-     * @return string containing the outcome of the operation
+     * 
+     * @param fileInputStream
+     * @param fileMetaData file informations
+     * @param destination path of the file to be updated with '*' instead of '/'
+     * @return String containing the outcome of the operation
      */
     @PUT
     @Path("files")
@@ -203,21 +188,25 @@ public class FileSystemResource {
     	@FormDataParam("file") InputStream fileInputStream,
         @FormDataParam("file") FormDataContentDisposition fileMetaData,
         @FormDataParam("destination") String destination){
-        //TODO: Spostare in ejb ed interpretare parametro path (al momento è statico)
         return directoryBean.updateFile(fileInputStream, fileMetaData.getFileName(), destination);
     }
     
     /**
-     * DELETE method for deleting a file
-     * @param path the path of the file with '*' instead of '/'
+     * POST method for upload a new file in a directory
+     * @param fileInputStream
+     * @param fileMetaData file information
+     * @param destination destination for the new file with '*' instead of '/'
      * @return string containing the outcome of the operation
      */
-    @DELETE
+    @POST
+    @Path("files")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.TEXT_PLAIN)
-    @Path("files/{path}")
-    public String deleteFile(@PathParam("path") String path) {
-        return directoryBean.deleteFile(path);
+    public String uploadFile(
+    	@FormDataParam("file") InputStream fileInputStream,
+        @FormDataParam("file") FormDataContentDisposition fileMetaData,
+        @FormDataParam("destination") String destination){
+        return directoryBean.uploadFile(fileInputStream, fileMetaData.getFileName(), destination);
     }
-    
     
 }

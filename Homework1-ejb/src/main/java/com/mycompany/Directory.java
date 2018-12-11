@@ -5,111 +5,109 @@
  */
 package com.mycompany;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.LinkedList;
-import java.util.function.Predicate;
 
 /**
- *
- * @author orazio
- * @author alessandro
  * 
+ * @author Orazio & Alessandro
  */
 public class Directory {
 
     private LinkedList<MyFile> files;
     private LinkedList<Directory> directories;
     private String name;
-    
+    private String lastModified;
+    private String lastAccessTime;
+    private String creationTime;
+
     /**
      * 
-     * @param name the name of the directory
-     * @param directories list of innder directories
-     * @param files list of files in the directory
+     * @param name 
      */
-    public Directory(String name, LinkedList<Directory> directories, LinkedList<Directory> files){
-        this.name = name;
+    public Directory(String name) {
         this.files = new LinkedList<MyFile>();
         this.directories = new LinkedList<Directory>();
+        this.name = name;
+        this.lastModified = null;
+        this.lastAccessTime = null;
+        this.creationTime = null;
     }
     
     /**
      * 
-     * @param name the name of the directory
+     * @param name
+     * @param lastModified
+     * @param lastAccessTime
+     * @param creationTime 
      */
-    public Directory(String name){
-        this.name = name;
+    public Directory(String name, String lastModified, String lastAccessTime, String creationTime) {
         this.files = new LinkedList<MyFile>();
         this.directories = new LinkedList<Directory>();
+        this.name = name;
+        this.lastModified = lastModified;
+        this.lastAccessTime = lastAccessTime;
+        this.creationTime = creationTime;
     }
     
-    /**
-     *
-     * @return the list of files in the directory
-     */
     @JsonProperty("files")
     public LinkedList<MyFile> getFiles() {
         return files;
     }
     
-    /**
-     *
-     * @return the list of directories in the directory
-     */
     @JsonProperty("directories")
     public LinkedList<Directory> getDirectories() {
         return directories;
     }
     
-    /**
-     *
-     * @return the name of current directory
-     */
     @JsonProperty("name")
     public String getName() {
         return name;
     }
     
-    /**
-     *
-     * @param name
-     */
     @JsonProperty("name")
     public void setName(String name) {
         this.name = name;
     }
     
-    /**
-     * creates a new directory in the current directory
-     * @param name
-     */
     public void addDirectory(String name) {
         this.directories.add(new Directory(name));
     }
     
-    /**
-     * creates a new file in the current directory
-     * @param name
-     */
     public void addFile(String name) {
         this.files.add(new MyFile(name));
     }
     
-    /**
-     * removes the directory with the specified name from current directory
-     * @param name the name of the directory to be deleted
-     */
     public void removeDirectory(String name) {
         this.directories.removeIf(p->p.getName().equals(name));
     }
     
-    /**
-     * removes the file with the specified name from current directory
-     * @param name the name of the file to be deleted
-     */
     public void removeFile(String name) {
         this.files.removeIf(p->p.getName().equals(name));
+    }
+
+    public String getLastModified() {
+        return lastModified;
+    }
+    
+    public void setLastModified(String lastModified) {
+        this.lastModified = lastModified;
+    }
+    
+    public String getLastAccessTime() {
+        return lastAccessTime;
+    }
+
+    public void setLastAccessTime(String lastAccessTime) {
+        this.lastAccessTime = lastAccessTime;
+    }
+
+    public String getCeationTime() {
+        return creationTime;
+    }
+
+    public void setCeationTime(String creationTime) {
+        this.creationTime = creationTime;
     }
     
 }
