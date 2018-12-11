@@ -102,11 +102,11 @@ public class Directory {
         this.lastAccessTime = lastAccessTime;
     }
 
-    public String getCeationTime() {
+    public String getCreationTime() {
         return creationTime;
     }
 
-    public void setCeationTime(String creationTime) {
+    public void setCreationTime(String creationTime) {
         this.creationTime = creationTime;
     }
     
