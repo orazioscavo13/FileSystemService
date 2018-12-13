@@ -5,8 +5,15 @@
  */
 package com.mycompany;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -39,6 +46,15 @@ public class LoadGeneratorServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
+        try {
+            Files.createDirectories(Paths.get("../TesterFiles"));
+        } catch (IOException ex) {
+            Logger.getLogger(DirectoryBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        for(int i = 1; i<=15; i++){
+         File file = new File("../TesterFiles/file_" + i + ".txt");
+        file.createNewFile();     
+        }    
         RequestSenderService sender = new RequestSenderService();
         ExecutorService uploadThreadPool;
         ExecutorService downloadThreadPool;
@@ -194,6 +210,24 @@ public class LoadGeneratorServlet extends HttpServlet {
         sender.deleteDirectory("Directory_0");
         sender.deleteDirectory("Directory_1");
         sender.deleteDirectory("Directory_2");
+        Path pathObj = Paths.get("../TesterFiles");
+        try {
+            Files.walkFileTree(pathObj, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
+                }
+                
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException ex) {
+            Logger.getLogger(DirectoryBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     private double getMean(long[] data, double size) {
