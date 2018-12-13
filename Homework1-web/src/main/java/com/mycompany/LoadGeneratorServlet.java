@@ -5,32 +5,17 @@
  */
 package com.mycompany;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.LongStream;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -58,6 +43,33 @@ public class LoadGeneratorServlet extends HttpServlet {
         ExecutorService uploadThreadPool;
         ExecutorService downloadThreadPool;
         ArrayList<Callable<Long>> threadList;
+        String table = 
+                    "            <table style=\"width:100%; border: 1px solid rgba(0,0,0,0.5); border-radius:3px; box-shadow:1px 1px 2px rgba(0,0,0,0.5); padding: 1rem;\">\n" +
+                    "                <thead>\n" +
+                    "                    <th>\n" +
+                    "                        Cartella\n" +
+                    "                    </th>\n" +
+                    "                    <th>\n" +
+                    "                        Ciclo\n" +
+                    "                    </th>\n" +
+                    "                    <th>\n" +
+                    "                        Media Add\n" +
+                    "                    </th>\n" +
+                    "                    <th>\n" +
+                    "                        Media Download\n" +
+                    "                    </th>\n" +
+                    "                    <th>\n" +
+                    "                        Deviazione Standard Add\n" +
+                    "                    </th>\n" +
+                    "                    <th>\n" +
+                    "                        Deviazione standard Download\n" +
+                    "                    </th>\n" +
+                    "                    <th>\n" +
+                    "                        Esito ciclo\n" +
+                    "                    </th>\n" +
+                    "                </thead>\n" +
+                    "                <tbody>";
+        
         
         // Creazione di tre directory. Per ogni directory, esecuzione di 3 cicli di 5 add e 10 download per ciclo.
       
@@ -114,40 +126,84 @@ public class LoadGeneratorServlet extends HttpServlet {
                     Logger.getLogger(LoadGeneratorServlet.class.getName()).log(Level.SEVERE, null, ex);
                 } 
                 
+                table = table +  
+            "               <tr>\n" + 
+            "                    <td>\nDirectory_" +
+                                    i +
+            "                    </td>\n" +
+                                 "<td>\n" +
+                                    (n+1) +
+            "                    </td>\n" +
+                                 "<td>\n" +
+                                    getMean(exeTimeAdd, 5) +
+            "                    </td>\n" +
+            "                    <td>\n" +
+                                    getMean(exeTimeDownload, 10) +
+            "                    </td>\n" +
+            "                    <td>\n" +
+                                    getStdDev(exeTimeAdd, 5) +
+            "                    </td>\n" +
+            "                    <td>\n" +
+                                    getStdDev(exeTimeDownload, 10) +
+            "                    </td>" + 
+            "                    <td>\n" +
+                                    operationOutcome(exeTimeAdd, exeTimeDownload) +
+            "                    </td>" +
+            "               </tr>";
                 System.out.println("------------------------------------");
-                System.out.println("===== RISULTATI Directory " + i + ", ciclo " + n+1 + "=====");
+                System.out.println("===== RISULTATI Directory " + i + ", ciclo " + (n+1) + "=====");
+                System.out.println("Tempi Add: ");
+                printArray(exeTimeAdd,5);
+                System.out.println("Tempi Download: ");
+                printArray(exeTimeDownload,10);
                 System.out.println("Media Add: " + getMean(exeTimeAdd, 5));
                 System.out.println("Deviazione standard Add: " + getStdDev(exeTimeAdd, 5));
                 System.out.println("Media Download: " + getMean(exeTimeDownload, 10));
                 System.out.println("Deviazione standard Download: " + getStdDev(exeTimeDownload, 10));
                 System.out.println("------------------------------------");
+                
+                
             }
         }
         
+        table = table + "</tbody>\n" +
+        "            </table>\n";
         
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet LoadGeneratorServlet</title>");            
+            out.println("<title>Servlet LoadGeneratorServlet</title>");  
+            out.println("<link rel=\"stylesheet\" href=\"https://use.fontawesome.com/releases/v5.6.1/css/all.css\" integrity=\"sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP\" crossorigin=\"anonymous\">");
             out.println("</head>");
             out.println("<body>");
+            out.println("<div>");
+            out.println("<div style=\"text-align:center\">");
             out.println("<h1>Servlet LoadGeneratorServlet at " + request.getContextPath() + "</h1>");
+            out.println("</div>");
+            out.println("<div style=\"text-align:center; padding:0 2rem 0 2rem;\">");
+            out.println(table);
+            out.println("</div>");
+            out.println("</div>");
             out.println("</body>");
             out.println("</html>");
         }
+        
+        //Clean the filesystem since test has finished
+        sender.deleteDirectory("Directory_0");
+        sender.deleteDirectory("Directory_1");
+        sender.deleteDirectory("Directory_2");
     }
     
-    private double getMean(long[] data, int size) {
+    private double getMean(long[] data, double size) {
         long sum = 0;
         for(long a : data)
             sum += a;
         return sum/size;
     }
 
-    private double getVariance(long[] data, int size) {
+    private double getVariance(long[] data, double size) {
         double mean = getMean(data, size);
         double temp = 0;
         for(double a :data)
@@ -155,7 +211,7 @@ public class LoadGeneratorServlet extends HttpServlet {
         return temp/(size-1);
     }
 
-    private double getStdDev(long[] data, int size) {
+    private double getStdDev(long[] data, double size) {
         return Math.sqrt(getVariance(data,size));
     }
     
@@ -169,6 +225,13 @@ public class LoadGeneratorServlet extends HttpServlet {
             threadPool.shutdownNow();
             Thread.currentThread().interrupt();
         }
+    }
+    
+    private void printArray(long array[], int length){
+        for (int i = 0; i<length; i++){
+           System.out.print(array[i] + "   ");
+        }
+        System.out.println(" ");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -209,5 +272,15 @@ public class LoadGeneratorServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private String operationOutcome(long[] exeTimeAdd, long[] exeTimeDownload) {
+        for (int i = 0; i<5; i++){
+           if(exeTimeAdd[i]==-1) return "<span class=\"fa fa-times-circle\" style=\"color: red;\"></span>";
+        }
+        for (int i = 0; i<10; i++){
+           if(exeTimeDownload[i]==-1) return "<span class=\"fa fa-times-circle\" style=\"color: red;\"></span>";
+        }
+        return "<span class=\"fa fa-check-circle\" style=\"color: green;\"></span>";
+    }
 
 }

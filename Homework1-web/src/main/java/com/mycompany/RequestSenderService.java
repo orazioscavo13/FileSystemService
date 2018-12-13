@@ -155,5 +155,24 @@ public class RequestSenderService {
         }
         return -1;
     }
+
+    public void deleteDirectory(String path) {
+        HttpURLConnection con = null;
+        String url = "http://localhost:43636/Homework1-web/webresources/filesystem/directories/"+ path;
+        try {
+            URL myurl = new URL(url);
+            con = (HttpURLConnection) myurl.openConnection();
+            con.setRequestMethod("DELETE");
+            int result = con.getResponseCode();
+            return;
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(RequestSenderService.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(RequestSenderService.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            con.disconnect();
+        }
+        return;
+    }
     
 }
