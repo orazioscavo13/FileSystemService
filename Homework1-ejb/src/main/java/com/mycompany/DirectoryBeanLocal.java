@@ -5,11 +5,9 @@
  */
 package com.mycompany;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.LinkedList;
 import javax.ejb.Local;
-import javax.servlet.http.Part;
 import javax.ws.rs.core.Response;
 
 /**

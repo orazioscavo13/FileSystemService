@@ -14,7 +14,6 @@ import java.util.concurrent.Callable;
 public class TestThread implements Callable<Long> {
     private String path;
     private String destination;
-    private int type; //0->download / 1->upload
 
     public TestThread(String path, String destination) {
         this.path = path;

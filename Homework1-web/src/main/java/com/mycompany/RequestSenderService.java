@@ -5,12 +5,10 @@
  */
 package com.mycompany;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -30,7 +28,11 @@ public class RequestSenderService {
     }
     
     
-     
+     /**
+      * 
+      * @param path the path for the new directory
+      * @return execution time (ms), -1 if the operation fails
+      */
     public long createDirectory(String path){
         HttpURLConnection con = null;
         String url = "http://localhost:43636/Homework1-web/webresources/filesystem/directories";
@@ -65,6 +67,12 @@ public class RequestSenderService {
         return -1;
     }
     
+    /**
+     * 
+     * @param path local path of the file to be uploaded
+     * @param destination destination for the file in the REST filesystem
+     * @return execution time (ms), -1 if the operation fails
+     */
     public long uploadFile(String path, String destination){
         //richiesta post (upload file)
         String url = "http://localhost:43636/Homework1-web/webresources/filesystem/files/";
@@ -126,6 +134,11 @@ public class RequestSenderService {
         return -1;
     }
     
+    /**
+     * 
+     * @param path the path of the file to be downloaded
+     * @return execution time (ms), -1 if the operation fails
+     */
     public long downloadFile(String path){
         HttpURLConnection con = null;
         String url = "http://localhost:43636/Homework1-web/webresources/filesystem/files/download/" + path;
@@ -156,6 +169,11 @@ public class RequestSenderService {
         return -1;
     }
 
+    
+    /**
+     * This method is used after the test for the final cleanup
+     * @param path the path of the directory to be deleted
+     */
     public void deleteDirectory(String path) {
         HttpURLConnection con = null;
         String url = "http://localhost:43636/Homework1-web/webresources/filesystem/directories/"+ path;

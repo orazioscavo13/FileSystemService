@@ -10,8 +10,8 @@ import javax.ws.rs.core.Application;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
 /**
- *
- * @author orazio
+ * 
+ * @author Orazio & Alessandro
  */
 @javax.ws.rs.ApplicationPath("webresources")
 public class ApplicationConfig extends Application {
