@@ -49,23 +49,21 @@ Docs/apidoc-web  (REST service and web application documentation)
 
 ## Running for Test
 
-#### Download or clone the project
+#### 1 - Download or clone the project
 ```bash
 git clone https://github.com/orazioscavo13/FileSystemService.git
 ```
 
-#### Open the project with Netbeans
-#### Select "Build with Dependencies" on main module.
-#### Run Homework1-ear
+#### 2 - Open the project with Netbeans
+#### 3 - Select "Build with Dependencies" on main module.
+#### 4 - Run Homework1-ear
 
 
-#### Select and configure Web Server
+#### 5 - Select and configure Web Server
 When you run the project for the first time you will need to select a web server. The project has been successfully tested on Glassfish Server 4.1, it may not work properly on some other platform.
 
 
-IMPORTANT!
-
-Depending on the web server u may need to change the port to the REST service in the frontend and in the RequestSender used by LoadGeneratorServlet (default is 43636):
+NB: Depending on the web server u may need to change the port to the REST service in the frontend and in the RequestSender used by LoadGeneratorServlet (default is 43636):
 
 - change the value of the attribute 'port' at RequestSenderService.java (line 28)
 - TODO: insert instruction to set port in frontend application
