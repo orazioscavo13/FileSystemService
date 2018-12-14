@@ -10,9 +10,11 @@ import java.util.LinkedList;
 import javax.ejb.Local;
 import javax.ws.rs.core.Response;
 
+
 /**
  * 
- * @author Orazio & Alessandro
+ * @author Orazio
+ * @author Alessandro
  */
 @Local
 public interface DirectoryBeanLocal {

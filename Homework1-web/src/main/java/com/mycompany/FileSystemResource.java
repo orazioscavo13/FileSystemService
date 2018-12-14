@@ -33,10 +33,12 @@ import javax.ws.rs.core.Response;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
+
 /**
  * REST Web Service
  * 
- * @author Orazio & Alessandro
+ * @author Orazio
+ * @author Alessandro
  */
 @Path("filesystem")
 @RequestScoped
@@ -175,7 +177,7 @@ public class FileSystemResource {
     
     /**
      * 
-     * @param fileInputStream
+     * @param fileInputStream inputstream from the file to be updated
      * @param fileMetaData file informations
      * @param destination path of the file to be updated with '*' instead of '/'
      * @return String containing the outcome of the operation
@@ -193,7 +195,7 @@ public class FileSystemResource {
     
     /**
      * POST method for upload a new file in a directory
-     * @param fileInputStream
+     * @param fileInputStream inputstream from the file to be uploaded
      * @param fileMetaData file information
      * @param destination destination for the new file with '*' instead of '/'
      * @return string containing the outcome of the operation

@@ -8,8 +8,9 @@ package com.mycompany;
 import java.util.concurrent.Callable;
 
 /**
- *
- * @author Orazio & Alessandro
+ * 
+ * @author Orazio
+ * @author Alessandro
  */
 public class TestThread implements Callable<Long> {
     private String path;

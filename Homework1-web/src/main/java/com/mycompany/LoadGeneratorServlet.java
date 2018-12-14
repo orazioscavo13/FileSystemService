@@ -29,9 +29,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 /**
- *
- * @author Orazio & Alessandro
+ * 
+ * @author Orazio
+ * @author Alessandro
  */
 @WebServlet(name = "LoadGeneratorServlet", urlPatterns = {"/LoadGeneratorServlet"})
 public class LoadGeneratorServlet extends HttpServlet {

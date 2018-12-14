@@ -46,13 +46,6 @@
             <version>2.12</version>
             <scope>compile</scope>
         </dependency>
-        <!-- Jersey Multipart entity providers support module -->
-        <dependency>
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-multipart</artifactId>
-            <version>2.12</version>
-            <type>jar</type>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/org.glassfish.jersey.media/jersey-media-multipart -->
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>

@@ -6,9 +6,11 @@
 package com.mycompany;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * 
- * @author Orazio & Alessandro
+ * @author Orazio
+ * @author Alessandro
  */
 class MyFile {
     private String name;

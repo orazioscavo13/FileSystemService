@@ -10,7 +10,8 @@ import java.util.LinkedList;
 
 /**
  * 
- * @author Orazio & Alessandro
+ * @author Orazio
+ * @author Alessandro
  */
 public class Directory {
 
@@ -23,7 +24,7 @@ public class Directory {
 
     /**
      * 
-     * @param name 
+     * @param name the name for the directory
      */
     public Directory(String name) {
         this.files = new LinkedList<MyFile>();
@@ -36,10 +37,10 @@ public class Directory {
     
     /**
      * 
-     * @param name
-     * @param lastModified
-     * @param lastAccessTime
-     * @param creationTime 
+     * @param name the name for the diredctory
+     * @param lastModified time of the last change on this directory
+     * @param lastAccessTime time of the last access on this directory
+     * @param creationTime time of the creation of this directory
      */
     public Directory(String name, String lastModified, String lastAccessTime, String creationTime) {
         this.files = new LinkedList<MyFile>();

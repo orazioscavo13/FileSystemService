@@ -26,9 +26,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 
+
 /**
  * 
- * @author Orazio & Alessandro
+ * @author Orazio
+ * @author Alessandro
  */
 @Stateless
 public class DirectoryBean implements DirectoryBeanLocal {
@@ -200,7 +202,7 @@ public class DirectoryBean implements DirectoryBeanLocal {
     
     /**
      * 
-     * @param fileInputStream
+     * @param fileInputStream inputstream from the file to be updated
      * @param filename the name of the file to be updated
      * @param destination path of the file to be updated
      * @return string containing the outcome of the operation
@@ -216,10 +218,10 @@ public class DirectoryBean implements DirectoryBeanLocal {
     
     /**
      * 
-     * @param fileInputStream
-     * @param filename
-     * @param destination
-     * @return 
+     * @param fileInputStream inputstream from the file to be uploaded
+     * @param filename the name of the file
+     * @param destination destination for the file in the remote filesystem (path with '*' instead of '/')
+     * @return string containing the outcome of the operation
      */
     @Override
     public String uploadFile(InputStream fileInputStream, String filename, String destination) {
