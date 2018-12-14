@@ -3,23 +3,134 @@
     <head>
         <title>Start Page</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <style>
+            li{
+                list-style: none; 
+                border-bottom: 1px solid blue;
+                padding:20px;
+            }
+            
+            .add-image{
+                width:4rem;
+                height:auto;
+                margin-bottom:18px;
+            }
+            
+            .list-image{
+                width: 3rem;
+                height: 3rem;
+            }
+            
+            .small-list-image{
+                width: 20px;
+                height: auto;
+                margin: 6px;
+            }
+        </style>
     </head>
     <body>
-        <div style="text-align:center">
+        <div style="text-align:center; margin:20px;">
             <h1>Welcome to File Syistem Service!</h1>
-            <a href="/Homework1-web/webresources/filesystem/directories/*"><button>REST service</button></a>
-            <h3>Official repo: <a href="https://github.com/orazioscavo13/FileSystemService">GIT</a></h3>
+            <div>
+                <a href="/Homework1-web/LoadGeneratorServlet"><button class="btn btn-primary">Start Automatic Test</button></a>
+                <a href="https://github.com/orazioscavo13/FileSystemService"><button class="btn btn-success">Go to Official Repo (GIT)</button></a>
+            </div>
         </div>
         <hr>
         <div style="text-align:center; margin-top:50px;">
-            <h2>Upload File</h2>
-            <form action="http://localhost:43636/Homework1-web/webresources/filesystem/files/" method="post" enctype="multipart/form-data">
-                <p>
-                    Select a file : <input type="file" name="file" size="45" />
-                    Destinazione: <input type="text" name="destination"/>
-                </p>
-	   <input type="submit" value="Upload It" />
-	</form>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>
+                        Current Path: 
+                        <span class="text-primary">FileSystemService/</span>
+                    </h3>
+                </div>
+                <div class="col-md-6" style="border-right: 1px solid black">
+                    <h4>Directories</h4>
+                    <hr>
+                    <div>
+                        <a>
+                            <img class="add-image" src="res/newDirectory.png">
+                            <br>
+                            <form>
+                                <input type="text" placeholder="Nome" name="name">
+                                <input type="submit" value="Crea una nuova Directory">
+                            </form>
+                            
+                        </a>
+                    </div>
+                    <hr>
+                    <div class="col-md-10 col-md-offset-1">
+                        <ul>
+                        <li class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <img class="list-image" src="res/folder.png">
+                                <span class="ml-2">Directory_1</span>
+                            </div>
+                            <div class="ml-3">
+                                <img class="small-list-image" src="res/delete.png">
+                            </div>
+                        </li>
+                        <li class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <img class="list-image" src="res/folder.png">
+                                <span class="ml-2">Directory_2</span>
+                            </div>
+                            <div class="ml-3">
+                                <img class="small-list-image" src="res/delete.png">
+                            </div>
+                        </li>
+                        
+                    </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h4>Files</h4>
+                    <hr>
+                    <div>
+                        <a>
+                            <img class="add-image" src="res/upload.png">
+                            <br>
+                            <form>
+                                <input type="file" placeholder="File" name="file">
+                                <input type="submit" value="Carica un file">
+                            </form>
+                            
+                        </a>
+                    </div>
+                    <hr>
+                    <div class="col-md-10 col-md-offset-1">
+                        <ul>
+                            <li class="d-flex align-items-center justify-content-between">
+                                <div>
+                                    <img class="list-image" src="res/file.png">
+                                    <span class="ml-2">file_1</span>
+                                </div>
+                                <div class="ml-3">
+                                    <img class="small-list-image" src="res/download.png">
+                                    <img class="small-list-image" src="res/delete.png">
+                                </div>
+                            </li>
+                            <li class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <img class="list-image" src="res/file.png">
+                                <span class="ml-2">file_1</span>
+                            </div>
+                            <div class="ml-3">
+                                <img class="small-list-image" src="res/download.png">
+                                <img class="small-list-image" src="res/delete.png">
+                            </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>

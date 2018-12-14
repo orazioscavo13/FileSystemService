@@ -63,25 +63,25 @@ public class LoadGeneratorServlet extends HttpServlet {
                     "            <table style=\"width:100%; border: 1px solid rgba(0,0,0,0.5); border-radius:3px; box-shadow:1px 1px 2px rgba(0,0,0,0.5); padding: 1rem;\">\n" +
                     "                <thead>\n" +
                     "                    <th>\n" +
-                    "                        Cartella\n" +
+                    "                        Directory\n" +
                     "                    </th>\n" +
                     "                    <th>\n" +
-                    "                        Ciclo\n" +
+                    "                        Cycle\n" +
                     "                    </th>\n" +
                     "                    <th>\n" +
-                    "                        Media Add\n" +
+                    "                        Add Mean\n" +
                     "                    </th>\n" +
                     "                    <th>\n" +
-                    "                        Media Download\n" +
+                    "                        Download Mean\n" +
                     "                    </th>\n" +
                     "                    <th>\n" +
-                    "                        Deviazione Standard Add\n" +
+                    "                        Add Standard deviation\n" +
                     "                    </th>\n" +
                     "                    <th>\n" +
-                    "                        Deviazione standard Download\n" +
+                    "                        Download Standard Deviation\n" +
                     "                    </th>\n" +
                     "                    <th>\n" +
-                    "                        Esito ciclo\n" +
+                    "                        Cycle state\n" +
                     "                    </th>\n" +
                     "                </thead>\n" +
                     "                <tbody>";
@@ -196,7 +196,7 @@ public class LoadGeneratorServlet extends HttpServlet {
             out.println("<body>");
             out.println("<div>");
             out.println("<div style=\"text-align:center\">");
-            out.println("<h1>Servlet LoadGeneratorServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Test Results</h1>");
             out.println("</div>");
             out.println("<div style=\"text-align:center; padding:0 2rem 0 2rem;\">");
             out.println(table);
