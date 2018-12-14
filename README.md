@@ -59,8 +59,10 @@ git clone https://github.com/orazioscavo13/FileSystemService.git
 #### 4 - Run Homework1-ear
 
 
-#### 5 - Select and configure Web Server
-When you run the project for the first time you will need to select a web server. The project has been successfully tested on Glassfish Server 4.1, it may not work properly on some other platform.
+#### 5 - Select and configure Web Server and environment
+When you run the project for the first time you will need to select a web server. 
+
+The project has been successfully tested on Glassfish Server 4.1 on ArchLinux, it may not work properly on some other platform.
 
 
 NB: Depending on the web server u may need to change the port to the REST service in the frontend and in the RequestSender used by LoadGeneratorServlet (default is 43636):
