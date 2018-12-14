@@ -24,3 +24,11 @@ li{
 .cursor-pointer {
     cursor: pointer;
 }
+
+.cursor-not-allowed {
+    cursor: not-allowed;
+}
+
+.border-radius-0 {
+    border-radius: 0;
+}

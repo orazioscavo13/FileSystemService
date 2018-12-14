@@ -39,30 +39,27 @@
             <hr>
             <div style="text-align:center; padding: 20px;">
                 <div class="row m-0">
-                    <div class="col-md-12 pb-4">
-                        <h3>
-                            Current Path: 
-                            <span class="text-primary">FileSystemService{{pathWithSlash}}</span>
-                        </h3>
+                    <div class="col-md-12 d-flex m-0 alert alert-dark" style="border-radius: 5px 5px 0px 0px;">
+                        <h3>Current Path: <span class="text-primary">FileSystemService{{pathWithSlash}}</span></h3>
                     </div>
                     
                     <!-- DIRECTORIES -->
-                    <div class="col-md-6 card p-0">
+                    <div class="col-md-6 card p-0 border-radius-0 h-100">
                         <div class="card-header d-flex align-items-center justify-content-between">
                             <h4>Directories</h4>
-                            <div><span class="fa fa-arrow-circle-left cursor-pointer" ng-click="getDirectories(previousPath)" data-toggle="tooltip" title="Indietro"></span></div>
+                            <div><span class="fa fa-arrow-circle-left cursor-pointer" ng-click="back()" data-toggle="tooltip" title="Indietro"></span></div>
                         </div>
-                        <div class="card-body">
-                            <div>
-                                <ul class="w-100 p-0 m-0 list-group">
+                        <div class="card-body" style="overflow:auto; height: calc(100vh - 350px);">
+                            <div class="h-100">
+                                <ul class="w-100 h-100 p-0 m-0">
                                     <li ng-show="directories.length == 0" class="list-group-item">Nessuna directory presente! Creane una tramite il pulsante in basso! <span class="fa fa-arrow-circle-down"></span></li>
                                     <li class="d-flex align-items-center justify-content-between list-group-item" ng-repeat="directory in directories track by $index">
                                         <div>
                                             <img class="list-image cursor-pointer" src="res/folder.png" ng-click="getDirectories(path + (path=='*' ? directory.name : ('*' + directory.name)))" data-toggle="tooltip" title="Apri directory">
                                             <span class="ml-2">{{directory.name}}</span>
                                         </div>
-                                        <div class="ml-3 cursor-pointer" ng-click="deleteDirectory(directory.name)" data-toggle="tooltip" title="Elimina directory">
-                                            <img class="small-list-image cursor-pointer" src="res/delete.png">
+                                        <div class="ml-3">
+                                            <img class="small-list-image cursor-pointer" src="res/delete.png" ng-click="deleteDirectory(directory.name)" data-toggle="tooltip" title="Elimina directory">
                                         </div>
                                     </li>
                                 </ul>
@@ -71,29 +68,29 @@
                         <div class="card-footer">
                              <div class="d-flex align-items-center justify-content-end">
                                 <div class="form-group m-0"><input type="text" class="form-control form-control-sm" placeholder="Name" name="name" ng-model="inputs.newDirectoryName"></div>
-                                <button type="button" class="btn btn-secondary btn-sm ml-2" ng-click="createDirectory(inputs.newDirectoryName)"><span class="fa fa-plus-circle"></span> Add Directory</button>
+                                <button type="button" class="btn btn-secondary btn-sm ml-2" ng-click="createDirectory(inputs.newDirectoryName)" ng-class="{'disabled cursor-not-allowed': (inputs.newDirectoryName==null || inputs.newDirectoryName=='')}"><span class="fa fa-plus-circle"></span> Add Directory</button>
                             </div>
                         </div>
                     </div>
                     
                     <!-- FILES -->
-                    <div class="col-md-6 card p-0">
+                    <div class="col-md-6 card p-0 border-radius-0 h-100">
                         <div class="card-header d-flex align-items-center justify-content-between">
-                            <h4>Directories</h4>
-                            <div><span class="fa fa-arrow-circle-left cursor-pointer" ng-click="getDirectories(previousPath)"></span></div>
+                            <h4>Files</h4>
                         </div>
-                        <div class="card-body">
-                            <div>
-                                <ul class="w-100 p-0 m-0 list-group">
+                        <div class="card-body" style="overflow:auto; height: calc(100vh - 350px);">
+                            <div class="h-100">
+                                <ul class="w-100 h-100 p-0 m-0">
                                     <li ng-show="files.length == 0" class="list-group-item">Nessun file presente! Creane uno tramite il pulsante in basso! <span class="fa fa-arrow-circle-down"></span></li>
                                     <li class="d-flex align-items-center justify-content-between list-group-item" ng-repeat="file in files track by $index">
                                         <div>
-                                            <img class="list-image cursor-pointer" src="res/file.png" ng-click="getDirectories(path + (path=='*' ? file.name : ('*' + file.name)))">
+                                            <img class="list-image" src="res/file.png">
                                             <span class="ml-2">{{file.name}}</span>
                                         </div>
-                                        <div class="ml-3 cursor-pointer" ng-click="deleteDirectory(file.name)">
-                                            <img class="small-list-image" src="res/download.png">
-                                            <img class="small-list-image cursor-pointer" src="res/delete.png">
+                                        <div class="ml-3">
+                                            <img class="small-list-image cursor-pointer" src="res/pencil.svg" data-toggle="tooltip" title="Aggiorna File" ng-click="updateFile(file.name)" ng-show="false">
+                                            <a href="{{baseUrl + 'files/download/' + path + file.name}}" download><img class="small-list-image cursor-pointer" src="res/download.png" data-toggle="tooltip" title="Download File" ng-click="downloadFile(file.name)"></a>
+                                            <img class="small-list-image cursor-pointer" src="res/delete.png" data-toggle="tooltip" title="Cancella File" ng-click="deleteFile(file.name)">
                                         </div>
                                     </li>
                                 </ul>
@@ -102,9 +99,9 @@
                         <div class="card-footer">
                              <div class="d-flex align-items-center justify-content-end">
                                 <div class="form-group m-0">
-                                    <input type="file" id="file1" name="file" ng-files="getTheFiles($files)"/>
+                                    <input type="file" ng-model="inputs.newFile" id="file1" name="file" ng-files="getTheFiles($files)"/>
                                 </div>
-                                <button type="button" class="btn btn-secondary btn-sm ml-2" ng-click="uploadFiles()"><span class="fa fa-plus-circle"></span> Upload File</button>
+                                <button type="button" class="btn btn-secondary btn-sm ml-2" ng-click="uploadFiles()" ng-class="{'disabled cursor-not-allowed': (inputs.newFile==null)}"><span class="fa fa-plus-circle"></span> Upload File</button>
                              </div>
                         </div>
                     </div>
