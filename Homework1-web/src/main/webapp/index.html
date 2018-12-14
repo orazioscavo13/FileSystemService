@@ -36,7 +36,7 @@
                     <a href="https://github.com/orazioscavo13/FileSystemService"><button class="btn btn-success">Go to Official Repo (GIT)</button></a>
                 </div>
             </div>
-            <hr>
+            <hr class="m-0">
             <div style="text-align:center; padding: 20px;">
                 <div class="row m-0">
                     <div class="col-md-12 d-flex m-0 alert alert-dark" style="border-radius: 5px 5px 0px 0px;">
@@ -45,17 +45,17 @@
                     
                     <!-- DIRECTORIES -->
                     <div class="col-md-6 card p-0 border-radius-0 h-100">
-                        <div class="card-header d-flex align-items-center justify-content-between">
-                            <h4>Directories</h4>
-                            <div><span class="fa fa-arrow-circle-left cursor-pointer" ng-click="back()" data-toggle="tooltip" title="Indietro"></span></div>
+                        <div class="card-header d-flex align-items-center justify-content-between py-2">
+                            <h4 class="m-0">Directories</h4>
+                            <div><span class="fa fa-arrow-circle-left cursor-pointer" ng-click="back()" data-toggle="tooltip" title="Indietro" style="font-size:26px;"></span></div>
                         </div>
-                        <div class="card-body" style="overflow:auto; height: calc(100vh - 350px);">
+                        <div class="card-body" style="overflow:auto; height: calc(100vh - 300px);">
                             <div class="h-100">
                                 <ul class="w-100 h-100 p-0 m-0">
                                     <li ng-show="directories.length == 0" class="list-group-item">Nessuna directory presente! Creane una tramite il pulsante in basso! <span class="fa fa-arrow-circle-down"></span></li>
-                                    <li class="d-flex align-items-center justify-content-between list-group-item" ng-repeat="directory in directories track by $index">
+                                    <li class="d-flex align-items-center justify-content-between list-group-item py-2" ng-repeat="directory in directories track by $index">
                                         <div>
-                                            <img class="list-image cursor-pointer" src="res/folder.png" ng-click="getDirectories(path + (path=='*' ? directory.name : ('*' + directory.name)))" data-toggle="tooltip" title="Apri directory">
+                                            <img class="list-image cursor-pointer" style="width: 32px; height:auto;" src="res/folder.png" ng-click="getDirectories(path + (path=='*' ? directory.name : ('*' + directory.name)))" data-toggle="tooltip" title="Apri directory">
                                             <span class="ml-2">{{directory.name}}</span>
                                         </div>
                                         <div class="ml-3">
@@ -75,16 +75,16 @@
                     
                     <!-- FILES -->
                     <div class="col-md-6 card p-0 border-radius-0 h-100">
-                        <div class="card-header d-flex align-items-center justify-content-between">
-                            <h4>Files</h4>
+                        <div class="card-header d-flex align-items-center justify-content-between py-2">
+                            <h4 class="m-0">Files</h4>
                         </div>
-                        <div class="card-body" style="overflow:auto; height: calc(100vh - 350px);">
+                        <div class="card-body" style="overflow:auto; height: calc(100vh - 300px);">
                             <div class="h-100">
                                 <ul class="w-100 h-100 p-0 m-0">
                                     <li ng-show="files.length == 0" class="list-group-item">Nessun file presente! Creane uno tramite il pulsante in basso! <span class="fa fa-arrow-circle-down"></span></li>
-                                    <li class="d-flex align-items-center justify-content-between list-group-item" ng-repeat="file in files track by $index">
+                                    <li class="d-flex align-items-center justify-content-between list-group-item py-2" ng-repeat="file in files track by $index">
                                         <div>
-                                            <img class="list-image" src="res/file.png">
+                                            <img class="list-image" src="res/file.png" style="width: 32px; height:auto;" >
                                             <span class="ml-2">{{file.name}}</span>
                                         </div>
                                         <div class="ml-3">
