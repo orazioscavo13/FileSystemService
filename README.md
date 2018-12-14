@@ -68,4 +68,4 @@ The project has been successfully tested on Glassfish Server 4.1 on ArchLinux, i
 NB: Depending on the web server u may need to change the port to the REST service in the frontend and in the RequestSender used by LoadGeneratorServlet (default is 43636):
 
 - change the value of the attribute 'port' at RequestSenderService.java (line 28)
-- TODO: insert instruction to set port in frontend application
+- change the value of the port in the baseUrl string in the js controller for the frontend page, mainCOntroller.js (line 10)
