@@ -47,6 +47,7 @@ git clone https://github.com/orazioscavo13/FileSystemService.git
 ```
 
 Then open the project with Netbeans, select "Build with Dependencies" on main module.
+
 Run Homework1-ear
 
 
@@ -55,6 +56,7 @@ When you run the project for the first time you will need to select a web server
 
 
 IMPORTANT!
+
 Depending on the web server u may need to change the port to the REST service in the frontend and in the RequestSender used by LoadGeneratorServlet:
 
 - change the value of the attribute 'port' at RequestSenderService.java (line 28)
