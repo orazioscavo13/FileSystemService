@@ -6,7 +6,7 @@ A web service for remote filesystem management.
 - [References](#references)
 - [Screenshots](#screenshots)
 - [Requirements](#requirements)
-- [Technologies used](#technologies-used)
+- [Dependencies](#dependencies)
 - [Running](#running-for-test)
 
 
@@ -36,7 +36,7 @@ Docs/apidoc-web  (REST service and web application documentation)
 
 
 
-## Technologies used
+## Dependencies
 
 - `jackson-annotations 2.6.0`
 - `jackson-databind 2.6.7.1`
@@ -65,7 +65,7 @@ When you run the project for the first time you will need to select a web server
 The project has been successfully tested on Glassfish Server 4.1 on ArchLinux, it may not work properly on some other platform.
 
 
-NB: Depending on the web server u may need to change the port to the REST service in the frontend and in the RequestSender used by LoadGeneratorServlet (default is 43636):
+NB: Depending on the web server you may need to change the port to the REST service in the frontend and in the RequestSender used by LoadGeneratorServlet (default is 43636):
 
 - change the value of the attribute 'port' at RequestSenderService.java (line 28)
 - change the value of the port in the baseUrl string in the js controller for the frontend page, mainController.js (line 10)
