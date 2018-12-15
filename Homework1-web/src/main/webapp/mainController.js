@@ -28,7 +28,7 @@ app.controller('mainCtrl', function($scope, $http, $httpParamSerializerJQLike) {
     };
     
     $scope.deleteDirectory = function(directoryName) {
-        $http.delete($scope.baseUrl + "directories/" + $scope.path + directoryName).then(function(resp) {
+        $http.delete($scope.baseUrl + "directories/" + $scope.path + "*" + directoryName).then(function(resp) {
             $scope.getDirectories($scope.path);
             console.log(resp);
         });
@@ -98,7 +98,6 @@ app.controller('mainCtrl', function($scope, $http, $httpParamSerializerJQLike) {
             $scope.path = $scope.path + parts[i] + "*"; //ricompongo il path senza inserire l'ultimo elemento
         }
         $scope.path = $scope.path == "*" ? "*" : $scope.path.substring(0, $scope.path.length-1);
-        //refresh di tutte le variabili dipendenti dal current path (controllare se c'è altro da allineare col nuovo path)
         $scope.getDirectories($scope.path);
     };
     
