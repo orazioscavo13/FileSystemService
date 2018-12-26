@@ -89,7 +89,7 @@ public class LoadGeneratorServlet extends HttpServlet {
                     "                        Download Mean\n" +
                     "                    </th>\n" +
                     "                    <th>\n" +
-                    "                        Add Standard deviation\n" +
+                    "                        Add Standard Deviation\n" +
                     "                    </th>\n" +
                     "                    <th>\n" +
                     "                        Download Standard Deviation\n" +
