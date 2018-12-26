@@ -28,7 +28,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.Channel;
+import java.util.concurrent.TimeoutException;
 
 /**
  * 
@@ -37,6 +40,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "LoadGeneratorServlet", urlPatterns = {"/LoadGeneratorServlet"})
 public class LoadGeneratorServlet extends HttpServlet {
+    private final static String QUEUE_NAME = "testResultQueue";
     
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,16 +50,24 @@ public class LoadGeneratorServlet extends HttpServlet {
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
+     * @throws java.util.concurrent.TimeoutException
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
+        
+        // Apre la connessione alla coda RabbitMQ
+        TestResult result;
+        ConnectionFactory factory = new ConnectionFactory();
+        factory.setHost("localhost");
+
+        // Manipolazione del file system per il test
         try {
             Files.createDirectories(Paths.get("../TesterFiles"));
         } catch (IOException ex) {
             Logger.getLogger(DirectoryBean.class.getName()).log(Level.SEVERE, null, ex);
         }
         for(int i = 1; i<=15; i++){
-         File file = new File("../TesterFiles/file_" + i + ".txt");
-        file.createNewFile();     
+            File file = new File("../TesterFiles/file_" + i + ".txt");
+            file.createNewFile();     
         }    
         RequestSenderService sender = new RequestSenderService();
         ExecutorService uploadThreadPool;
@@ -90,12 +102,11 @@ public class LoadGeneratorServlet extends HttpServlet {
         
         
         // Creazione di tre directory. Per ogni directory, esecuzione di 3 cicli di 5 add e 10 download per ciclo.
-      
         for(int i=0; i<3 ;i++) {
 
             sender.createDirectory("Directory_" + i);
 	
-            // 3 cicli di 5 add e 10 download. Cicli sincroni, op che sono analoghe tra loro dentro il singolo ciclo eseguite in modo asincrono
+            // 3 cicli di 5 add e 10 download. Cicli sincroni, operazioni che sono analoghe tra loro dentro il singolo ciclo eseguite in modo asincrono
             for(int n=0;n<3;n++) {
 		long exeTimeAdd[] = new long[5];
 		long exeTimeDownload[] = new long[10];
@@ -143,29 +154,29 @@ public class LoadGeneratorServlet extends HttpServlet {
                 } catch (ExecutionException ex) {
                     Logger.getLogger(LoadGeneratorServlet.class.getName()).log(Level.SEVERE, null, ex);
                 } 
-                
+                result = new TestResult(n+1, "Directory_" + i, getMean(exeTimeAdd, 5), getMean(exeTimeDownload, 10), getStdDev(exeTimeAdd, 5), getStdDev(exeTimeDownload, 10), operationOutcome(exeTimeAdd, exeTimeDownload));
                 table = table +  
             "               <tr>\n" + 
-            "                    <td>\nDirectory_" +
-                                    i +
+            "                    <td>\n" +
+                                    result.getDirectory() +
             "                    </td>\n" +
                                  "<td>\n" +
                                     (n+1) +
             "                    </td>\n" +
                                  "<td>\n" +
-                                    getMean(exeTimeAdd, 5) +
+                                    result.getMeanAdd()+
             "                    </td>\n" +
             "                    <td>\n" +
-                                    getMean(exeTimeDownload, 10) +
+                                    result.getMeanDownload() +
             "                    </td>\n" +
             "                    <td>\n" +
-                                    getStdDev(exeTimeAdd, 5) +
+                                    result.getStdAdd()+
             "                    </td>\n" +
             "                    <td>\n" +
-                                    getStdDev(exeTimeDownload, 10) +
+                                    result.getStdDownload() +
             "                    </td>" + 
             "                    <td>\n" +
-                                    operationOutcome(exeTimeAdd, exeTimeDownload) +
+                                    printOperationOutcome(result.getState()) +
             "                    </td>" +
             "               </tr>";
                 System.out.println("------------------------------------");
@@ -180,7 +191,17 @@ public class LoadGeneratorServlet extends HttpServlet {
                 System.out.println("Deviazione standard Download: " + getStdDev(exeTimeDownload, 10));
                 System.out.println("------------------------------------");
                 
-                
+                /*
+                Publishing results on RabbitMQ Queue for persistent saving in the DB
+                */
+                try (Connection connection = factory.newConnection();
+                    Channel channel = connection.createChannel()){
+                    channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+                    channel.basicPublish("", QUEUE_NAME, null, result.serialize());
+                    System.out.println(" [x] Result Sent");
+                } catch (TimeoutException ex) {
+                    Logger.getLogger(LoadGeneratorServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
         
@@ -309,14 +330,20 @@ public class LoadGeneratorServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private String operationOutcome(long[] exeTimeAdd, long[] exeTimeDownload) {
+    private int operationOutcome(long[] exeTimeAdd, long[] exeTimeDownload) {
         for (int i = 0; i<5; i++){
-           if(exeTimeAdd[i]==-1) return "<span class=\"fa fa-times-circle\" style=\"color: red;\"></span>";
+           if(exeTimeAdd[i]==-1) return 0;
         }
         for (int i = 0; i<10; i++){
-           if(exeTimeDownload[i]==-1) return "<span class=\"fa fa-times-circle\" style=\"color: red;\"></span>";
+           if(exeTimeDownload[i]==-1) return 0;
         }
-        return "<span class=\"fa fa-check-circle\" style=\"color: green;\"></span>";
+        return 1;
+    }
+    
+    private String printOperationOutcome(int state){
+        if (state==0) return "<span class=\"fa fa-times-circle\" style=\"color: red;\"></span>";
+        else return "<span class=\"fa fa-check-circle\" style=\"color: green;\"></span>";
+        
     }
 
 }
