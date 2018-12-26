@@ -1,0 +1,5 @@
+com/mycompany/ResultReceiver.class
+com/mycompany/ApplicationConfig.class
+com/mycompany/TestResult.class
+com/mycompany/QueueListener.class
+com/mycompany/DatabaseManagerResource.class
