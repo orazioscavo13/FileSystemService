@@ -45,7 +45,7 @@ public class ResultReceiver {
                     in = new ObjectInputStream(bis);
                     TestResult result = (TestResult) in.readObject();
                     System.out.println(" [x] Received result");
-                    System.out.println(result.getDirectory() + " - Ciclo " + result.getCiclo());
+                    System.out.println(result.getDirectory() + " - Ciclo " + result.getCycle());
                 } catch (ClassNotFoundException ex) {
                     Logger.getLogger(ResultReceiver.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {

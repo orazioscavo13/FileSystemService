@@ -19,7 +19,7 @@ import java.util.Date;
  * @author Alessandro
  */
 public class TestResult implements Serializable{
-    private int ciclo;
+    private int cycle;
     private String directory;
     private double meanAdd;
     private double meanDownload;
@@ -30,7 +30,7 @@ public class TestResult implements Serializable{
 
     /**
      * 
-     * @param ciclo
+     * @param cycle
      * @param directory
      * @param meanAdd
      * @param meanDownload
@@ -38,8 +38,8 @@ public class TestResult implements Serializable{
      * @param stdDownload
      * @param state 
      */
-    public TestResult(int ciclo, String directory, double meanAdd, double meanDownload, double stdAdd, double stdDownload, int state) {
-        this.ciclo = ciclo;
+    public TestResult(int cycle, String directory, double meanAdd, double meanDownload, double stdAdd, double stdDownload, int state) {
+        this.cycle = cycle;
         this.directory = directory;
         this.meanAdd = meanAdd;
         this.meanDownload = meanDownload;
@@ -49,8 +49,8 @@ public class TestResult implements Serializable{
         this.timestamp = (new SimpleDateFormat("yyyy/MM/dd - HH:mm:ss")).format(new Date());
     }
 
-    public int getCiclo() {
-        return ciclo;
+    public int getCycle() {
+        return cycle;
     }
 
     public String getDirectory() {
