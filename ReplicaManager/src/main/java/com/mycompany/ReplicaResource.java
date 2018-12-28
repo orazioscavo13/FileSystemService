@@ -6,9 +6,6 @@
 package com.mycompany;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientException;
 import com.mongodb.MongoCredential;
@@ -18,15 +15,6 @@ import com.mongodb.MongoWriteException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -40,7 +28,6 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PUT;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import org.bson.Document;
@@ -49,14 +36,13 @@ import org.bson.Document;
  * REST Web Service
  *
  * @author Orazio
+ * @author Alessandro
  */
 @Path("mongodb")
 public class ReplicaResource {
     private MongoClient mongo;
     private MongoCredential credential; 
     private MongoDatabase database;
-    private static final String BASIC_LOG_PATH = "../dbLog";
-    private static final String LOG_PATH = BASIC_LOG_PATH + "/replicaLog.log";
     private static final String SUCCESS_FALSE = "{\"success\": false}";
     private static final String SUCCESS_TRUE = "{\"success\": true}";
     
@@ -144,6 +130,7 @@ public class ReplicaResource {
     
     /**
      * Retrieves the last document inserted in the specified collection
+     * @param collectionName
      * @return an instance of java.lang.String
      */
     @GET
@@ -188,9 +175,9 @@ public class ReplicaResource {
     public String AddEntry(@FormParam("sequenceNumber") int sequenceNumber, @FormParam("collectionName") String collectionName, @FormParam("directory") String directory, @FormParam("cycle") int cycle, @FormParam("mean_add") double meanAdd, @FormParam("mean_download") double meanDownload, @FormParam("stddev_add") double stdDevAdd, @FormParam("stddev_download") double stdDevDownload, @FormParam("state") int state, @FormParam("timestamp") String timestamp) {
         String ret = "";
         
-        if(!checkLogFile()) ret = SUCCESS_FALSE;     
+        if(!LogManager.checkLogFile()) ret = SUCCESS_FALSE;     
         else {
-            if(addLogEntry(sequenceNumber, collectionName, directory, cycle, meanAdd, meanDownload, stdDevAdd, stdDevDownload, state, timestamp))
+            if(LogManager.addLogEntry(sequenceNumber, collectionName, directory, cycle, meanAdd, meanDownload, stdDevAdd, stdDevDownload, state, timestamp))
                 ret = "{\"success\": true. \"sequenceNumber\": " + sequenceNumber + "}";
             else
                 ret = "{\"success\": true. \"sequenceNumber\": " + sequenceNumber + "}";
@@ -213,7 +200,7 @@ public class ReplicaResource {
         LogEntry entry = null;
         LogEntry entryToCommit = null;
         
-        ArrayList<LogEntry> entries = readEntries();
+        ArrayList<LogEntry> entries = LogManager.readEntries();
         if(entries == null) {
             ret = SUCCESS_FALSE;
         } else {
@@ -232,7 +219,7 @@ public class ReplicaResource {
             if(entryToCommit != null && writeDbEntry(entryToCommit)) {
                 
                 // Aggiornamento log se la scrittura sul database ha avuto successo
-                if(writeEntries(entries))
+                if(LogManager.writeEntries(entries))
                     ret = "{\"success\": true. \"sequenceNumber\": " + sequenceNumber + "}";
                 else
                     ret = SUCCESS_FALSE;
@@ -243,122 +230,49 @@ public class ReplicaResource {
         return ret;
     }
     
-    
     /**
-     * Reads entries from log file
-     * @return the entries of the log file
+     * POST method for abort a DB operation
+     * @param sequenceNumber
+     * @return 
      */
-    public ArrayList<LogEntry> readEntries() {
+    @POST
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Path("collections/abort")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String AbortEntry(@FormParam("sequenceNumber") int sequenceNumber) {
+        String ret = "";
+        LogEntry entry = null;
+        boolean bFound = false;
         
-        FileInputStream fis = null;
-        ObjectInputStream ois = null;
-        ArrayList<LogEntry> entries = null;
-        
-        try {
-            fis = new FileInputStream(LOG_PATH);
-            ois = new ObjectInputStream(fis);
-            entries = (ArrayList<LogEntry>) ois.readObject();
+        ArrayList<LogEntry> entries = LogManager.readEntries();
+        if(entries == null) {
+            ret = SUCCESS_FALSE;
+        } else {
+            // Ricerca nel log dell'elemento da committare
+            Iterator<LogEntry> iterator = entries.iterator();
+            while(iterator.hasNext()) {
+                entry = iterator.next();
+                if(entry.getSequenceNumber() == sequenceNumber) {
+                    iterator.remove();
+                    bFound=true;
+                    break;
+                }
+            }
             
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(ReplicaResource.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(ReplicaResource.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                ois.close();
-                fis.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ReplicaResource.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
-        return entries;
-    }
-    
-    /**
-     * Writes an array list of entries in the log file
-     * @param entries
-     * @return boolean, true if success
-     */
-    public boolean writeEntries (ArrayList<LogEntry> entries) {
-        boolean ret = true;
-        FileOutputStream fout = null;
-        ObjectOutputStream oos = null;
-        
-        try {
-            fout = new FileOutputStream(LOG_PATH);
-            oos = new ObjectOutputStream(fout);
-            oos.writeObject(entries);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(ReplicaResource.class.getName()).log(Level.SEVERE, null, ex);
-            ret = false;
-        } catch (IOException ex) {
-            Logger.getLogger(ReplicaResource.class.getName()).log(Level.SEVERE, null, ex);
-            ret = false;
-        } finally {
-            try {
-                oos.close();
-                fout.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ReplicaResource.class.getName()).log(Level.SEVERE, null, ex);
-                ret = false;
-            }
+            // Aggiornamento log
+            if(bFound && LogManager.writeEntries(entries))
+                ret = "{\"success\": true. \"sequenceNumber\": " + sequenceNumber + "}";
+            else
+                ret = SUCCESS_FALSE;
+            
         }
         
         return ret;
     }
     
     /**
-     * Writes an entry in the log file
-     * @param sequenceNumber
-     * @param collectionName
-     * @param directory
-     * @param cycle
-     * @param meanAdd
-     * @param meanDownload
-     * @param stdDevAdd
-     * @param stdDevDownload
-     * @param state
-     * @param timestamp
-     * @return boolean, true if success
-     */
-    public boolean addLogEntry (int sequenceNumber, String collectionName, String directory, int cycle, double meanAdd, double meanDownload, double stdDevAdd, double stdDevDownload, int state, String timestamp) {
-        LogEntry logEntry = new LogEntry(new TestResult(cycle,directory,meanAdd, meanDownload, stdDevAdd, stdDevDownload, state), sequenceNumber, collectionName);
-        
-        ArrayList<LogEntry> entries = readEntries();
-        if(entries!=null){
-            entries.add(logEntry);
-        } else {
-            entries = new ArrayList<LogEntry>();
-            entries.add(logEntry);
-        }
-        
-        return writeEntries(entries);
-    }
-    
-    /**
-     * Creates the log file if it does not exist. 
-     * @return false if the log file creation failed.
-     */
-    public boolean checkLogFile() {
-        if(!Files.exists(Paths.get(LOG_PATH))){
-            try{
-                Files.createDirectories(Paths.get(BASIC_LOG_PATH));
-                File file = new File(LOG_PATH);
-                file.createNewFile();
-            }catch(IOException ioe){
-              System.out.println("Error while creating a new log file :" + ioe);
-              return false;
-            }
-        }
-        
-        return true;
-    }
-    
-    /**
      * 
      * @param entry
-     * @param collectionName
      * @return true if the write operation succeed
      */
     public boolean writeDbEntry(LogEntry entry) {
