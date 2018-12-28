@@ -94,4 +94,9 @@ public class TestResult implements Serializable{
         out.flush();
         return bos.toByteArray();
     }
+    
+    @Override
+    public String toString() {
+        return "TestResult{" + "cycle=" + cycle + ", directory=" + directory + ", meanAdd=" + meanAdd + ", meanDownload=" + meanDownload + ", stdAdd=" + stdAdd + ", stdDownload=" + stdDownload + ", timestamp=" + timestamp + ", state=" + state + '}';
+    }
 }

@@ -50,7 +50,6 @@ public class LoadGeneratorServlet extends HttpServlet {
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
-     * @throws java.util.concurrent.TimeoutException
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException { 
         
@@ -128,9 +127,7 @@ public class LoadGeneratorServlet extends HttpServlet {
                     for(int j=0; j<5; j++) {
                         exeTimeAdd[j] = futures.get(j).get();
                     }
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(LoadGeneratorServlet.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ExecutionException ex) {
+                } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(LoadGeneratorServlet.class.getName()).log(Level.SEVERE, null, ex);
                 } 
 
@@ -149,9 +146,7 @@ public class LoadGeneratorServlet extends HttpServlet {
                     for(int j=0; j<10; j++) {
                         exeTimeDownload[j] = futures.get(j).get();
                     }
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(LoadGeneratorServlet.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ExecutionException ex) {
+                } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(LoadGeneratorServlet.class.getName()).log(Level.SEVERE, null, ex);
                 } 
                 result = new TestResult(n+1, "Directory_" + i, getMean(exeTimeAdd, 5), getMean(exeTimeDownload, 10), getStdDev(exeTimeAdd, 5), getStdDev(exeTimeDownload, 10), operationOutcome(exeTimeAdd, exeTimeDownload));

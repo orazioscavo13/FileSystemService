@@ -106,7 +106,7 @@ public class LogManager {
      * @return boolean, true if write succeed
      */
     public static boolean addLogEntry (int sequenceNumber, String collectionName, String directory, int cycle, double meanAdd, double meanDownload, double stdDevAdd, double stdDevDownload, int state, String timestamp) {
-        LogEntry logEntry = new LogEntry(new TestResult(cycle,directory,meanAdd, meanDownload, stdDevAdd, stdDevDownload, state), sequenceNumber, collectionName);
+        LogEntry logEntry = new LogEntry(new TestResult(cycle, directory, meanAdd, meanDownload, stdDevAdd, stdDevDownload, state, timestamp), sequenceNumber, collectionName);
         
         ArrayList<LogEntry> entries = readEntries();
         if(entries!=null){

@@ -5,7 +5,6 @@
  */
 package com.mycompany;
 import java.io.IOException;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,13 +28,9 @@ public class QueueListener implements ServletContextListener {
         try {
             receiver = new ResultReceiver();
             receiver.initializeReceiver();
-        } catch (IOException ex) {
-            Logger.getLogger(QueueListener.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (TimeoutException ex) {
+        } catch (IOException | TimeoutException ex) {
             Logger.getLogger(QueueListener.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
     }
  
     @Override

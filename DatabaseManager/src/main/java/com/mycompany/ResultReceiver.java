@@ -25,30 +25,34 @@ import java.util.logging.Logger;
  */
 public class ResultReceiver {
         private final static String QUEUE_NAME = "testResultQueue";
-        ConnectionFactory factory;
-        Connection connection;
-        Channel channel;
-        DeliverCallback deliverCallback;
+        private final static String RESULT_COLLECTION_NAME = "testResult";
+        private TransactionManager transactionManager;
+        private ConnectionFactory factory;
+        private Connection connection;
+        private Channel channel;
+        private DeliverCallback deliverCallback;
         
         public ResultReceiver() throws IOException, TimeoutException{
             factory = new ConnectionFactory();
             connection = factory.newConnection();
             channel = connection.createChannel();
+            transactionManager = TransactionManager.getInstance();
         }
         
-        
         public void initializeReceiver() throws IOException {
+            // Callback chiamata ogni qual volta viene ricevuto qualcosa dalla coda RabbitMQ
             deliverCallback = (String consumerTag, Delivery delivery) -> {
                 try {
+                    // Deserializziamo l'elemento prelevato dalla coda
                     ByteArrayInputStream bis = new ByteArrayInputStream(delivery.getBody());
                     ObjectInput in = null;
                     in = new ObjectInputStream(bis);
                     TestResult result = (TestResult) in.readObject();
-                    System.out.println(" [x] Received result");
-                    System.out.println(result.getDirectory() + " - Ciclo " + result.getCycle());
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(ResultReceiver.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
+                    
+                    // Salvataggio dell'elemento all'interno del db tramite 2PC
+                    System.out.println("[x] Received result: " + result.toString());
+                    transactionManager.twoPhaseCommitWrite(result, RESULT_COLLECTION_NAME);
+                } catch (ClassNotFoundException | IOException ex) {
                     Logger.getLogger(ResultReceiver.class.getName()).log(Level.SEVERE, null, ex);
                 }
             };

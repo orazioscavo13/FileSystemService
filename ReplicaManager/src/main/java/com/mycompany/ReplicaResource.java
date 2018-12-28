@@ -169,7 +169,7 @@ public class ReplicaResource {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("collections")
     @Produces(MediaType.TEXT_PLAIN)
-    public String AddEntry(@FormParam("sequenceNumber") int sequenceNumber, @FormParam("collectionName") String collectionName, @FormParam("directory") String directory, @FormParam("cycle") int cycle, @FormParam("mean_add") double meanAdd, @FormParam("mean_download") double meanDownload, @FormParam("stddev_add") double stdDevAdd, @FormParam("stddev_download") double stdDevDownload, @FormParam("state") int state, @FormParam("timestamp") String timestamp) {
+    public String addEntry(@FormParam("sequenceNumber") int sequenceNumber, @FormParam("collectionName") String collectionName, @FormParam("directory") String directory, @FormParam("cycle") int cycle, @FormParam("mean_add") double meanAdd, @FormParam("mean_download") double meanDownload, @FormParam("stddev_add") double stdDevAdd, @FormParam("stddev_download") double stdDevDownload, @FormParam("state") int state, @FormParam("timestamp") String timestamp) {
         String ret = "";
         
         if(!LogManager.checkLogFile()) ret = SUCCESS_FALSE;     
@@ -192,7 +192,7 @@ public class ReplicaResource {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("collections/commit")
     @Produces(MediaType.TEXT_PLAIN)
-    public String CommitEntry(@FormParam("sequenceNumber") int sequenceNumber) {
+    public String commitEntry(@FormParam("sequenceNumber") int sequenceNumber) {
         String ret = "";
         LogEntry entry = null;
         LogEntry entryToCommit = null;
@@ -236,7 +236,7 @@ public class ReplicaResource {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("collections/abort")
     @Produces(MediaType.TEXT_PLAIN)
-    public String AbortEntry(@FormParam("sequenceNumber") int sequenceNumber) {
+    public String abortEntry(@FormParam("sequenceNumber") int sequenceNumber) {
         String ret = "";
         LogEntry entry = null;
         boolean bFound = false;

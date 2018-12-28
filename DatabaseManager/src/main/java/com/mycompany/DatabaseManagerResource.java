@@ -5,13 +5,16 @@
  */
 package com.mycompany;
 
+import java.util.LinkedList;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PUT;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -19,8 +22,9 @@ import javax.ws.rs.core.MediaType;
  *
  * @author Orazio
  */
-@Path("db")
+@Path("mongodb")
 public class DatabaseManagerResource {
+    private TransactionManager transactionManager;
 
     @Context
     private UriInfo context;
@@ -28,27 +32,52 @@ public class DatabaseManagerResource {
     /**
      * Creates a new instance of DatabaseManagerResource
      */
-    public DatabaseManagerResource() throws Exception{
-        
+    public DatabaseManagerResource(){
+        transactionManager = TransactionManager.getInstance();
     }
 
     /**
-     * Retrieves representation of an instance of com.mycompany.DatabaseManagerResource
-     * @return an instance of java.lang.String
+     * Retrieves all documents in the specified collection
+     * @param collectionName
+     * @return string containing the outcome of the operation and the collection's documents
      */
     @GET
+    @Path("collections/{collectionName}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String getXml() {
-        //TODO return proper representation object
-        return "OK";
+    public String getCollection(@PathParam("collectionName") String collectionName) {
+        return transactionManager.quorumRead(collectionName);
     }
-
+    
     /**
-     * PUT method for updating or creating an instance of DatabaseManagerResource
-     * @param content representation for the resource
+     * Retrieves the last document committed in the specified collection
+     * @param collectionName
+     * @return string containing the outcome of the operation and the last committed document
      */
-    @PUT
-    @Consumes(MediaType.APPLICATION_XML)
-    public void putXml(String content) {
+    @GET
+    @Path("collections/{collectionName}/lastCommittedDocument")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getLastCommittedDocument(@PathParam("collectionName") String collectionName) {
+        return transactionManager.quorumRead(collectionName + "/lastCommittedDocument");
+    }
+    
+    /**
+     * 
+     * @param collectionName
+     * @param directory
+     * @param cycle
+     * @param meanAdd
+     * @param meanDownload
+     * @param stdDevAdd
+     * @param stdDevDownload
+     * @param state
+     * @param timestamp
+     * @return 
+     */
+    @POST
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Path("collections/commit")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String commitEntry(@FormParam("collectionName") String collectionName, @FormParam("directory") String directory, @FormParam("cycle") int cycle, @FormParam("mean_add") double meanAdd, @FormParam("mean_download") double meanDownload, @FormParam("stddev_add") double stdDevAdd, @FormParam("stddev_download") double stdDevDownload, @FormParam("state") int state, @FormParam("timestamp") String timestamp) {
+        return transactionManager.twoPhaseCommitWrite(new TestResult(cycle, directory, meanAdd, meanDownload, stdDevAdd, stdDevDownload, state, timestamp), collectionName);
     }
 }
