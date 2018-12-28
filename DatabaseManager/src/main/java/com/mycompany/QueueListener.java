@@ -19,12 +19,9 @@ import javax.servlet.ServletContextListener;
  */
 public class QueueListener implements ServletContextListener {
  
-    private ScheduledExecutorService scheduler;
- 
     /**
      *
      * @param event
-     * @throws Exception
      */
     @Override
     public void contextInitialized(ServletContextEvent event) {

@@ -80,17 +80,4 @@ public class TestResult implements Serializable{
     public int getState() {
         return state;
     }
-
-    /**
-     * 
-     * @return Serialized Object as a byte
-     * @throws IOException 
-     */
-    public byte[] serialize() throws IOException{
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutput out = new ObjectOutputStream(bos);   
-        out.writeObject(this);
-        out.flush();
-        return bos.toByteArray();
-    }
 }

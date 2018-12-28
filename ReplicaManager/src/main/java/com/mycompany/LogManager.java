@@ -28,8 +28,8 @@ public class LogManager {
     private static final String LOG_PATH = BASIC_LOG_PATH + "/replicaLog.log";
     
     /**
-     * Reads entries from log file
-     * @return the entries of the log file
+     * Reads all entries from log file
+     * @return ArrayList of LogEntry containing the entries of the log file
      */
     public static ArrayList<LogEntry> readEntries() {
         
@@ -59,9 +59,9 @@ public class LogManager {
     }
     
     /**
-     * Writes an array list of entries in the log file
+     * Writes an ArrayList of LogEntry in the log file
      * @param entries
-     * @return boolean, true if success
+     * @return boolean, true if write succeed
      */
     public static boolean writeEntries (ArrayList<LogEntry> entries) {
         boolean ret = true;
@@ -92,7 +92,7 @@ public class LogManager {
     }
     
     /**
-     * Writes an entry in the log file
+     * Writes a LogEntry in the log file
      * @param sequenceNumber
      * @param collectionName
      * @param directory
@@ -103,7 +103,7 @@ public class LogManager {
      * @param stdDevDownload
      * @param state
      * @param timestamp
-     * @return boolean, true if success
+     * @return boolean, true if write succeed
      */
     public static boolean addLogEntry (int sequenceNumber, String collectionName, String directory, int cycle, double meanAdd, double meanDownload, double stdDevAdd, double stdDevDownload, int state, String timestamp) {
         LogEntry logEntry = new LogEntry(new TestResult(cycle,directory,meanAdd, meanDownload, stdDevAdd, stdDevDownload, state), sequenceNumber, collectionName);
@@ -120,10 +120,12 @@ public class LogManager {
     }
     
     /**
-     * Creates the log file if it does not exist. 
+     * Check if the log file exists, if not creates it.
      * @return false if the log file creation failed.
      */
     public static boolean checkLogFile() {
+        boolean ret = true;
+        
         if(!Files.exists(Paths.get(LOG_PATH))){
             try{
                 Files.createDirectories(Paths.get(BASIC_LOG_PATH));
@@ -131,10 +133,10 @@ public class LogManager {
                 file.createNewFile();
             }catch(IOException ioe){
               System.out.println("Error while creating a new log file :" + ioe);
-              return false;
+              ret = false;
             }
         }
         
-        return true;
+        return ret;
     }
 }

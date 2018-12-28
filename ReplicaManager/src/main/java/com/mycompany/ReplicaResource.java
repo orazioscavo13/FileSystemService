@@ -54,12 +54,11 @@ public class ReplicaResource {
      * Creates a new instance of ReplicaResource
      */
     public ReplicaResource() {
-         
     }
     
     /**
-     * TODO: RITORNARE BOOLEAN
-     * @return 
+     * Connects the replica manager to its database
+     * @return true if replica manager connects to its database, else false 
      */
     public boolean connect(){
         boolean ret = true;
@@ -83,7 +82,7 @@ public class ReplicaResource {
     }
       
     /**
-     * DELETE method for deleting a collection
+     * DELETE method for deleting a collection from the database
      * @param collectionName
      * @return string containing the outcome of the operation
      */
@@ -94,7 +93,6 @@ public class ReplicaResource {
         String ret;
         if(connect()) {
             MongoCollection<Document> collection = database.getCollection(collectionName);
-
             collection.drop(); 
             ret = SUCCESS_TRUE;
         } else 
@@ -106,7 +104,7 @@ public class ReplicaResource {
     /**
      * Retrieves all documents in the specified collection
      * @param collectionName
-     * @return an instance of java.lang.String
+     * @return string containing the outcome of the operation and the collection's documents
      */
     @GET
     @Path("collections/{collectionName}")
@@ -129,23 +127,22 @@ public class ReplicaResource {
     }
     
     /**
-     * Retrieves the last document inserted in the specified collection
+     * Retrieves the last document committed in the specified collection
      * @param collectionName
-     * @return an instance of java.lang.String
+     * @return string containing the outcome of the operation and the last committed document
      */
     @GET
-    @Path("collections/{collectionName}/lastCommittedResult")
+    @Path("collections/{collectionName}/lastCommittedDocument")
     @Produces(MediaType.TEXT_PLAIN)
-    public String getLastTestResult(@PathParam("collectionName") String collectionName) {
+    public String getLastCommittedDocument(@PathParam("collectionName") String collectionName) {
         String ret;
         if(connect()) {
-            BasicDBObject searchQuery = new BasicDBObject();
             MongoCollection<Document> collection = database.getCollection(collectionName);
             FindIterable<Document> iterDoc = collection.find(new BasicDBObject());
             iterDoc.sort(new BasicDBObject("_id", -1));
             Iterator it = iterDoc.iterator();
             if(it.hasNext()) { 
-                ret = "{\"success\": true, \"lastCommittedResult\": " + it.next() + "}";
+                ret = "{\"success\": true, \"lastCommittedDocument\": " + it.next() + "}";
             } else
                 ret = SUCCESS_FALSE;
         } else
@@ -155,7 +152,7 @@ public class ReplicaResource {
     }
     
     /**
-     * POST method for adding or creating an element in the DB
+     * POST method for adding or creating an element in the log file (for first phase of 2PC)
      * @param sequenceNumber
      * @param collectionName
      * @param directory
@@ -187,9 +184,9 @@ public class ReplicaResource {
     }
         
     /**
-     * POST method for adding or creating an element in the DB
+     * POST method for commit an element in the database (for second phase of 2PC)
      * @param sequenceNumber
-     * @return 
+     * @return string containing the outcome of the operation
      */
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -231,9 +228,9 @@ public class ReplicaResource {
     }
     
     /**
-     * POST method for abort a DB operation
+     * POST method for abort a database operation (for second phase of 2PC)
      * @param sequenceNumber
-     * @return 
+     * @return string containing the outcome of the operation
      */
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -271,7 +268,7 @@ public class ReplicaResource {
     }
     
     /**
-     * 
+     * Writes a document in the specified database collection
      * @param entry
      * @return true if the write operation succeed
      */
