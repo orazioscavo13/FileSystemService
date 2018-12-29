@@ -87,7 +87,7 @@ public class ReplicaResource {
      * @return string containing the outcome of the operation
      */
     @DELETE
-    @Path("collections/{collectionName}")
+    @Path("collections/{collection_name}")
     @Produces(MediaType.TEXT_PLAIN)
     public String deleteCollection(@PathParam("collection_name") String collectionName) {
         String ret;
@@ -107,7 +107,7 @@ public class ReplicaResource {
      * @return string containing the outcome of the operation and the collection's documents
      */
     @GET
-    @Path("collections/{collectionName}")
+    @Path("collections/{collection_name}")
     @Produces(MediaType.TEXT_PLAIN)
     public String getCollection(@PathParam("collection_name") String collectionName) {
         String ret;
@@ -118,8 +118,8 @@ public class ReplicaResource {
             Iterator it = iterDoc.iterator(); 
 
             String out = "";
-            while (it.hasNext()) { out = out + it.next() + (it.hasNext() ? ", " : ""); }
-            ret = "{\"success\": true, \"documents\": " + out + "}";
+            while (it.hasNext()) { out = out + ((Document) it.next()).toJson() + (it.hasNext() ? ", " : ""); }
+            ret = "{\"success\": true, \"documents\": [" + out + "]}";
         } else
             ret = SUCCESS_FALSE;
         
@@ -132,7 +132,7 @@ public class ReplicaResource {
      * @return string containing the outcome of the operation and the last committed document
      */
     @GET
-    @Path("collections/{collectionName}/lastCommittedDocument")
+    @Path("collections/{collection_name}/lastCommittedDocument")
     @Produces(MediaType.TEXT_PLAIN)
     public String getLastCommittedDocument(@PathParam("collection_name") String collectionName) {
         String ret;
@@ -175,9 +175,9 @@ public class ReplicaResource {
         if(!LogManager.checkLogFile()) ret = SUCCESS_FALSE;     
         else {
             if(LogManager.addLogEntry(sequenceNumber, collectionName, directory, cycle, meanAdd, meanDownload, stdDevAdd, stdDevDownload, state, timestamp))
-                ret = "{\"success\": true. \"sequence_number\": " + sequenceNumber + "}";
+                ret = "{\"success\": true, \"sequence_number\": " + sequenceNumber + "}";
             else
-                ret = "{\"success\": true. \"sequence_number\": " + sequenceNumber + "}";
+                ret = "{\"success\": true, \"sequence_number\": " + sequenceNumber + "}";
         }
         
         return ret;
@@ -197,6 +197,7 @@ public class ReplicaResource {
         LogEntry entry = null;
         LogEntry entryToCommit = null;
         
+        LogManager.checkLogFile();     
         ArrayList<LogEntry> entries = LogManager.readEntries();
         if(entries == null) {
             ret = SUCCESS_FALSE;
@@ -217,7 +218,7 @@ public class ReplicaResource {
                 
                 // Aggiornamento log se la scrittura sul database ha avuto successo
                 if(LogManager.writeEntries(entries))
-                    ret = "{\"success\": true. \"sequence_number\": " + sequenceNumber + "}";
+                    ret = "{\"success\": true, \"sequence_number\": " + sequenceNumber + "}";
                 else
                     ret = SUCCESS_FALSE;
             } else 
@@ -241,6 +242,7 @@ public class ReplicaResource {
         LogEntry entry = null;
         boolean bFound = false;
         
+        LogManager.checkLogFile();     
         ArrayList<LogEntry> entries = LogManager.readEntries();
         if(entries == null) {
             ret = SUCCESS_FALSE;
@@ -258,7 +260,7 @@ public class ReplicaResource {
             
             // Aggiornamento log
             if(bFound && LogManager.writeEntries(entries))
-                ret = "{\"success\": true. \"sequence_number\": " + sequenceNumber + "}";
+                ret = "{\"success\": true, \"sequence_number\": " + sequenceNumber + "}";
             else
                 ret = SUCCESS_FALSE;
             

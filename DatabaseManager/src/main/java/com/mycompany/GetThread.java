@@ -5,7 +5,11 @@
  */
 package com.mycompany;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.concurrent.Callable;
@@ -35,19 +39,40 @@ public class GetThread implements Callable<String> {
     @Override
     public String call() throws Exception {
         HttpURLConnection con = null;
+        StringBuilder content = null;
         String ret;
         URL myurl = new URL(url);
-        try{
-            con = (HttpURLConnection) myurl.openConnection();
-            con.setRequestMethod("GET");
-            con.setConnectTimeout(timeout); //set timeout to 5 seconds
-            ret = con.getResponseMessage();
-            if(con.getResponseCode() != 200) 
+        
+        con = (HttpURLConnection) myurl.openConnection();
+        con.setRequestMethod("GET");
+        con.setConnectTimeout(timeout); 
+        
+        try {
+            if(con.getResponseCode() != 200) {
                 ret = SUCCESS_FALSE;
-        }catch(SocketTimeoutException e){
+            } else {
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String line;
+                content = new StringBuilder();
+                while ((line = in.readLine()) != null) {
+                    content.append(line);
+                    content.append(System.lineSeparator());
+                }
+                ret = content.toString();
+            }
+        } catch(SocketTimeoutException e){
             Logger.getLogger(GetThread.class.getName()).log(Level.SEVERE, null, e);
             ret = SUCCESS_FALSE;
+        }  catch (MalformedURLException ex) {
+            Logger.getLogger(PostThread.class.getName()).log(Level.SEVERE, null, ex);
+            ret = SUCCESS_FALSE;
+        } catch (IOException ex) {
+            Logger.getLogger(PostThread.class.getName()).log(Level.SEVERE, null, ex);
+            ret = SUCCESS_FALSE;
+        } finally {
+            con.disconnect();
         }
+        
         return ret;
     }
 }

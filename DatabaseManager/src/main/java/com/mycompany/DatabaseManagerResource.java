@@ -41,7 +41,7 @@ public class DatabaseManagerResource {
      * @return string containing the outcome of the operation and the collection's documents
      */
     @GET
-    @Path("collections/{collectionName}")
+    @Path("collections/{collection_name}")
     @Produces(MediaType.TEXT_PLAIN)
     public String getCollection(@PathParam("collection_name") String collectionName) {
         return transactionManager.quorumRead(collectionName);
@@ -53,7 +53,7 @@ public class DatabaseManagerResource {
      * @return string containing the outcome of the operation and the last committed document
      */
     @GET
-    @Path("collections/{collectionName}/lastCommittedDocument")
+    @Path("collections/{collection_name}/lastCommittedDocument")
     @Produces(MediaType.TEXT_PLAIN)
     public String getLastCommittedDocument(@PathParam("collection_name") String collectionName) {
         return transactionManager.quorumRead(collectionName + "/lastCommittedDocument");

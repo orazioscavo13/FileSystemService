@@ -131,6 +131,7 @@ public class LogManager {
                 Files.createDirectories(Paths.get(BASIC_LOG_PATH));
                 File file = new File(LOG_PATH);
                 file.createNewFile();
+                writeEntries(new ArrayList<LogEntry>());
             }catch(IOException ioe){
               System.out.println("Error while creating a new log file :" + ioe);
               ret = false;

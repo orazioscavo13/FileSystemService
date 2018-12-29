@@ -5,8 +5,12 @@
  */
 package com.mycompany;
 
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -25,8 +29,6 @@ public class PostThread implements Callable<String> {
     private TestResult result;
     private int sequenceNumber;
     private String collectionName;
-    private static final String SUCCESS_FALSE = "{\"success\": false}";
-
 
     public PostThread(String url, int timeout, TestResult result, int sequenceNumber, String collectionName) {
         this.url = url;
@@ -40,7 +42,9 @@ public class PostThread implements Callable<String> {
     public String call() throws Exception {
         String ret;
         HttpURLConnection con = null;
-        String urlParameters = "sequenceNumber=" + sequenceNumber;
+        StringBuilder content = null;
+        String urlParameters = "sequence_number=" + sequenceNumber;
+        
         if(result != null){
             urlParameters = urlParameters + 
                     "&directory=" + result.getDirectory() + 
@@ -51,25 +55,50 @@ public class PostThread implements Callable<String> {
                     "&stddev_download=" + result.getStdDownload()+ 
                     "&state=" + result.getState()+ 
                     "&timestamp=" + result.getTimestamp()+ 
-                    "&collection_name=" + (collectionName == null ? "testResult" : collectionName) + 
-                    "&sequence_number=" + sequenceNumber ;
+                    "&collection_name=" + (collectionName == null ? "testResult" : collectionName);
         }
         byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
         URL myurl = new URL(url);
         con = (HttpURLConnection) myurl.openConnection();
         con.setDoOutput(true);
         con.setRequestMethod("POST");
+        con.setConnectTimeout(timeout); 
         con.setRequestProperty("User-Agent", "Java client");
         con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        
         try (DataOutputStream wr = new DataOutputStream(con.getOutputStream())) {
             wr.write(postData);
-            ret = con.getResponseMessage();
-            if(con.getResponseCode() != 200) 
-                ret = SUCCESS_FALSE;
-        }catch(SocketTimeoutException e){
+        } catch (IOException ex) {
+            Logger.getLogger(PostThread.class.getName()).log(Level.SEVERE, null, ex);
+            ret = "{\"success\": false, \"sequence_number\": " + sequenceNumber + "}";
+        } 
+        
+        try {
+            if(con.getResponseCode() != 200) {
+                ret = "{\"success\": false, \"sequence_number\": " + sequenceNumber + "}";
+            } else {
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String line;
+                content = new StringBuilder();
+                while ((line = in.readLine()) != null) {
+                    content.append(line);
+                    content.append(System.lineSeparator());
+                }
+                ret = content.toString();
+            }
+        } catch(SocketTimeoutException e){
             Logger.getLogger(GetThread.class.getName()).log(Level.SEVERE, null, e);
-            ret = SUCCESS_FALSE;
+            ret = "{\"success\": false, \"sequence_number\": " + sequenceNumber + "}";
+        }  catch (MalformedURLException ex) {
+            Logger.getLogger(PostThread.class.getName()).log(Level.SEVERE, null, ex);
+            ret = "{\"success\": false, \"sequence_number\": " + sequenceNumber + "}";
+        } catch (IOException ex) {
+            Logger.getLogger(PostThread.class.getName()).log(Level.SEVERE, null, ex);
+            ret = "{\"success\": false, \"sequence_number\": " + sequenceNumber + "}";
+        } finally {
+            con.disconnect();
         }
+        
         return ret;
     }
     

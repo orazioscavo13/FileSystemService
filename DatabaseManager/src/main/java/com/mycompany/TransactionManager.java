@@ -35,11 +35,7 @@ public class TransactionManager {
     private TransactionManager() {
         this.sequenceNumber = 0;
         replicaList = new ArrayList<String>();
-        replicaList.add("localhost:43636/");
-        replicaList.add("localhost:43636/");
-        replicaList.add("localhost:43636/");
-        replicaList.add("localhost:43636/");
-        replicaList.add("localhost:43636/");
+        replicaList.add("http://localhost:43636/");
     }
     
     public static TransactionManager getInstance() {
@@ -67,7 +63,7 @@ public class TransactionManager {
     }
     
     public ArrayList<String> first2PCphase (TestResult result, String path){
-        String url = BASIC_RESOURCE_IDENTIFIER + "collections/" + path;
+        String url = BASIC_RESOURCE_IDENTIFIER + "collections" + (result == null ? ("/" + path) : "");
         ArrayList<Callable<String>> threadList = new ArrayList<Callable<String>>();
         ExecutorService threadPoolService = Executors.newFixedThreadPool(5);
         ArrayList<String> resultList = new ArrayList<String>();
@@ -154,7 +150,7 @@ public class TransactionManager {
         for(int i=0; i<resultList.size(); i++) {
             count = 0;
             for(int j=0; j<resultList.size(); j++) {
-                if(i!=j && resultList.get(i).equals(resultList.get(j))) {
+                if(resultList.get(i).equals(resultList.get(j))) {
                     count++;
                     if(count > resultList.size()/2)
                         return resultList.get(i);
