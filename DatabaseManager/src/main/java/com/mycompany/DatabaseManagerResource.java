@@ -5,7 +5,6 @@
  */
 package com.mycompany;
 
-import java.util.LinkedList;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
@@ -44,7 +43,7 @@ public class DatabaseManagerResource {
     @GET
     @Path("collections/{collectionName}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String getCollection(@PathParam("collectionName") String collectionName) {
+    public String getCollection(@PathParam("collection_name") String collectionName) {
         return transactionManager.quorumRead(collectionName);
     }
     
@@ -56,7 +55,7 @@ public class DatabaseManagerResource {
     @GET
     @Path("collections/{collectionName}/lastCommittedDocument")
     @Produces(MediaType.TEXT_PLAIN)
-    public String getLastCommittedDocument(@PathParam("collectionName") String collectionName) {
+    public String getLastCommittedDocument(@PathParam("collection_name") String collectionName) {
         return transactionManager.quorumRead(collectionName + "/lastCommittedDocument");
     }
     
@@ -77,7 +76,7 @@ public class DatabaseManagerResource {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("collections/commit")
     @Produces(MediaType.TEXT_PLAIN)
-    public String commitEntry(@FormParam("collectionName") String collectionName, @FormParam("directory") String directory, @FormParam("cycle") int cycle, @FormParam("mean_add") double meanAdd, @FormParam("mean_download") double meanDownload, @FormParam("stddev_add") double stdDevAdd, @FormParam("stddev_download") double stdDevDownload, @FormParam("state") int state, @FormParam("timestamp") String timestamp) {
+    public String commitEntry(@FormParam("collection_name") String collectionName, @FormParam("directory") String directory, @FormParam("cycle") int cycle, @FormParam("mean_add") double meanAdd, @FormParam("mean_download") double meanDownload, @FormParam("stddev_add") double stdDevAdd, @FormParam("stddev_download") double stdDevDownload, @FormParam("state") int state, @FormParam("timestamp") String timestamp) {
         return transactionManager.twoPhaseCommitWrite(new TestResult(cycle, directory, meanAdd, meanDownload, stdDevAdd, stdDevDownload, state, timestamp), collectionName);
     }
 }

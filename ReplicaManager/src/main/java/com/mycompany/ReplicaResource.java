@@ -89,7 +89,7 @@ public class ReplicaResource {
     @DELETE
     @Path("collections/{collectionName}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String deleteCollection(@PathParam("collectionName") String collectionName) {
+    public String deleteCollection(@PathParam("collection_name") String collectionName) {
         String ret;
         if(connect()) {
             MongoCollection<Document> collection = database.getCollection(collectionName);
@@ -109,7 +109,7 @@ public class ReplicaResource {
     @GET
     @Path("collections/{collectionName}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String getCollection(@PathParam("collectionName") String collectionName) {
+    public String getCollection(@PathParam("collection_name") String collectionName) {
         String ret;
         if(connect()) {
             BasicDBObject searchQuery = new BasicDBObject();
@@ -134,7 +134,7 @@ public class ReplicaResource {
     @GET
     @Path("collections/{collectionName}/lastCommittedDocument")
     @Produces(MediaType.TEXT_PLAIN)
-    public String getLastCommittedDocument(@PathParam("collectionName") String collectionName) {
+    public String getLastCommittedDocument(@PathParam("collection_name") String collectionName) {
         String ret;
         if(connect()) {
             MongoCollection<Document> collection = database.getCollection(collectionName);
@@ -169,15 +169,15 @@ public class ReplicaResource {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("collections")
     @Produces(MediaType.TEXT_PLAIN)
-    public String addEntry(@FormParam("sequenceNumber") int sequenceNumber, @FormParam("collectionName") String collectionName, @FormParam("directory") String directory, @FormParam("cycle") int cycle, @FormParam("mean_add") double meanAdd, @FormParam("mean_download") double meanDownload, @FormParam("stddev_add") double stdDevAdd, @FormParam("stddev_download") double stdDevDownload, @FormParam("state") int state, @FormParam("timestamp") String timestamp) {
+    public String addEntry(@FormParam("sequence_number") int sequenceNumber, @FormParam("collection_name") String collectionName, @FormParam("directory") String directory, @FormParam("cycle") int cycle, @FormParam("mean_add") double meanAdd, @FormParam("mean_download") double meanDownload, @FormParam("stddev_add") double stdDevAdd, @FormParam("stddev_download") double stdDevDownload, @FormParam("state") int state, @FormParam("timestamp") String timestamp) {
         String ret = "";
         
         if(!LogManager.checkLogFile()) ret = SUCCESS_FALSE;     
         else {
             if(LogManager.addLogEntry(sequenceNumber, collectionName, directory, cycle, meanAdd, meanDownload, stdDevAdd, stdDevDownload, state, timestamp))
-                ret = "{\"success\": true. \"sequenceNumber\": " + sequenceNumber + "}";
+                ret = "{\"success\": true. \"sequence_number\": " + sequenceNumber + "}";
             else
-                ret = "{\"success\": true. \"sequenceNumber\": " + sequenceNumber + "}";
+                ret = "{\"success\": true. \"sequence_number\": " + sequenceNumber + "}";
         }
         
         return ret;
@@ -192,7 +192,7 @@ public class ReplicaResource {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("collections/commit")
     @Produces(MediaType.TEXT_PLAIN)
-    public String commitEntry(@FormParam("sequenceNumber") int sequenceNumber) {
+    public String commitEntry(@FormParam("sequence_number") int sequenceNumber) {
         String ret = "";
         LogEntry entry = null;
         LogEntry entryToCommit = null;
@@ -217,7 +217,7 @@ public class ReplicaResource {
                 
                 // Aggiornamento log se la scrittura sul database ha avuto successo
                 if(LogManager.writeEntries(entries))
-                    ret = "{\"success\": true. \"sequenceNumber\": " + sequenceNumber + "}";
+                    ret = "{\"success\": true. \"sequence_number\": " + sequenceNumber + "}";
                 else
                     ret = SUCCESS_FALSE;
             } else 
@@ -236,7 +236,7 @@ public class ReplicaResource {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Path("collections/abort")
     @Produces(MediaType.TEXT_PLAIN)
-    public String abortEntry(@FormParam("sequenceNumber") int sequenceNumber) {
+    public String abortEntry(@FormParam("sequence_number") int sequenceNumber) {
         String ret = "";
         LogEntry entry = null;
         boolean bFound = false;
@@ -258,7 +258,7 @@ public class ReplicaResource {
             
             // Aggiornamento log
             if(bFound && LogManager.writeEntries(entries))
-                ret = "{\"success\": true. \"sequenceNumber\": " + sequenceNumber + "}";
+                ret = "{\"success\": true. \"sequence_number\": " + sequenceNumber + "}";
             else
                 ret = SUCCESS_FALSE;
             

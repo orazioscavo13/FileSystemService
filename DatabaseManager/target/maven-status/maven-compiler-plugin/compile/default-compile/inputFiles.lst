@@ -1,4 +1,5 @@
 /home/orazio/git/FileSystemService/DatabaseManager/src/main/java/com/mycompany/ApplicationConfig.java
+/home/orazio/git/FileSystemService/DatabaseManager/src/main/java/com/mycompany/PostThread.java
 /home/orazio/git/FileSystemService/DatabaseManager/src/main/java/com/mycompany/GetThread.java
 /home/orazio/git/FileSystemService/DatabaseManager/src/main/java/com/mycompany/ResultReceiver.java
 /home/orazio/git/FileSystemService/DatabaseManager/src/main/java/com/mycompany/QueueListener.java

@@ -24,6 +24,7 @@ public class QueueListener implements ServletContextListener {
      */
     @Override
     public void contextInitialized(ServletContextEvent event) {
+        System.out.println("CIAO MERDE!");
         ResultReceiver receiver;
         try {
             receiver = new ResultReceiver();

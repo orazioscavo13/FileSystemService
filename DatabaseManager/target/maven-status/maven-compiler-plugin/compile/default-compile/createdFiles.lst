@@ -1,6 +1,7 @@
 com/mycompany/GetThread.class
 com/mycompany/ResultReceiver.class
 com/mycompany/TestResult.class
+com/mycompany/PostThread.class
 com/mycompany/ApplicationConfig.class
 com/mycompany/TransactionManager.class
 com/mycompany/QueueListener.class

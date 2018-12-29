@@ -155,7 +155,6 @@ public class FileSystemResource {
         
         try {
             String stringifiedFiles = mapper.writeValueAsString(files);
-            //TODO: utilizzare un metodo di serializzazione/deserializzazione migliore
             return "{\"success\": true, \"files\":" + stringifiedFiles + "}"; 
         } catch (JsonProcessingException ex) {
             Logger.getLogger(FileSystemResource.class.getName()).log(Level.SEVERE, null, ex);

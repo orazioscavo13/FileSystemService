@@ -6,7 +6,11 @@
 package com.mycompany;
 
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
+import java.net.URL;
 import java.util.concurrent.Callable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * 
@@ -16,42 +20,34 @@ import java.util.concurrent.Callable;
 public class GetThread implements Callable<String> {
     private String url;
     private int timeout;
-    private HttpURLConnection con = null;
-
+    private static final String SUCCESS_FALSE = "{\"success\": false}";
 
     public GetThread(String url, int timeout) {
         this.url = url;
         this.timeout = timeout;
     }
 
+    /**
+     * Sends a get request to a single replica manager and waits for response within a specified timeout
+     * @return String contining the outcome of the operations
+     * @throws Exception 
+     */
     @Override
     public String call() throws Exception {
-        /*
-        try {
-            URL myurl = new URL(url);
+        HttpURLConnection con = null;
+        String ret;
+        URL myurl = new URL(url);
+        try{
             con = (HttpURLConnection) myurl.openConnection();
             con.setRequestMethod("GET");
-            StringBuilder content;
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
-                String line;
-                content = new StringBuilder();
-                while ((line = in.readLine()) != null) {
-                    content.append(line);
-                    content.append(System.lineSeparator());
-                }
-            }
-            System.out.println(content.toString());
-            return time;
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(RequestSenderService.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(RequestSenderService.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            con.disconnect();
+            con.setConnectTimeout(timeout); //set timeout to 5 seconds
+            ret = con.getResponseMessage();
+            if(con.getResponseCode() != 200) 
+                ret = SUCCESS_FALSE;
+        }catch(SocketTimeoutException e){
+            Logger.getLogger(GetThread.class.getName()).log(Level.SEVERE, null, e);
+            ret = SUCCESS_FALSE;
         }
-        return -1;
-        */
-       return "CIAO MERDE";
+        return ret;
     }
-    
 }

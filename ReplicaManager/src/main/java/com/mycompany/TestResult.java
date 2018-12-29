@@ -103,6 +103,20 @@ public class TestResult implements Serializable{
         return state;
     }
     
+    /**
+     * 
+     * @return Serialized Object as a byte
+     * @throws IOException 
+     */
+    public byte[] serialize() throws IOException{
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutput out = null;
+        out = new ObjectOutputStream(bos);   
+        out.writeObject(this);
+        out.flush();
+        return bos.toByteArray();
+    }
+    
     @Override
     public String toString() {
         return "TestResult{" + "cycle=" + cycle + ", directory=" + directory + ", meanAdd=" + meanAdd + ", meanDownload=" + meanDownload + ", stdAdd=" + stdAdd + ", stdDownload=" + stdDownload + ", timestamp=" + timestamp + ", state=" + state + '}';

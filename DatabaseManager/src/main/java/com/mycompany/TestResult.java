@@ -5,6 +5,10 @@
  */
 package com.mycompany;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,7 +49,6 @@ public class TestResult implements Serializable{
         this.timestamp = (new SimpleDateFormat("yyyy/MM/dd - HH:mm:ss")).format(new Date());
     }
 
-    
     /**
      * 
      * @param cycle
@@ -100,6 +103,20 @@ public class TestResult implements Serializable{
         return state;
     }
 
+    /**
+     * 
+     * @return Serialized Object as a byte
+     * @throws IOException 
+     */
+    public byte[] serialize() throws IOException{
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutput out = null;
+        out = new ObjectOutputStream(bos);   
+        out.writeObject(this);
+        out.flush();
+        return bos.toByteArray();
+    }
+    
     @Override
     public String toString() {
         return "TestResult{" + "cycle=" + cycle + ", directory=" + directory + ", meanAdd=" + meanAdd + ", meanDownload=" + meanDownload + ", stdAdd=" + stdAdd + ", stdDownload=" + stdDownload + ", timestamp=" + timestamp + ", state=" + state + '}';

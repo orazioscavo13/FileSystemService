@@ -5,7 +5,10 @@
  */
 package com.mycompany;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -47,6 +50,7 @@ public class TransactionManager {
     }
     
     public String twoPhaseCommitWrite(TestResult result, String writePath) {
+        sequenceNumber++;
         // Prima fase
         ArrayList<String> resultList = first2PCphase(result, writePath);
         
@@ -74,7 +78,7 @@ public class TransactionManager {
                 if(result == null) 
                     threadList.add(new GetThread(replicaList.get(i) + url, TIMEOUT));
                 else
-                    threadList.add(new PostThread(replicaList.get(i) + url, TIMEOUT, result));
+                    threadList.add(new PostThread(replicaList.get(i) + url, TIMEOUT, result, sequenceNumber, path));
             } catch (Exception ex) {
                 Logger.getLogger(TransactionManager.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -93,14 +97,50 @@ public class TransactionManager {
         return resultList;
     }
     
+    public String second2PCphase (int sequenceNumber, boolean commit){
+        String ret = SUCCESS_TRUE;
+        String url = BASIC_RESOURCE_IDENTIFIER + "collections/" + (commit ? "commit" : "abort");
+        ArrayList<Callable<String>> threadList = new ArrayList<Callable<String>>();
+        ExecutorService threadPoolService = Executors.newFixedThreadPool(5);
+        
+        // Esegue 5 thread in parallelo, ognuno dei quali invia una richiesta POST (Abort o Commit) ad un replica manager diverso
+        for(int i=0; i<replicaList.size(); i++) {
+            try {
+                threadList.add(new PostThread(replicaList.get(i) + url, TIMEOUT, null , sequenceNumber, null));
+            } catch (Exception ex) {
+                Logger.getLogger(TransactionManager.class.getName()).log(Level.SEVERE, null, ex);
+                ret = SUCCESS_FALSE;
+            }
+        }
+        try {
+            ArrayList<Future<String>> futures = (ArrayList<Future<String>>) threadPoolService.invokeAll(threadList);
+            awaitTerminationAfterShutDown(threadPoolService);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(TransactionManager.class.getName()).log(Level.SEVERE, null, ex);
+            ret = SUCCESS_FALSE;
+        } 
+        return ret;
+    }
+    
+    
     /**
-     * TODO TODO TODO TODO TODO TODO TODO TODO TODO
+     * @param resultList
      * @param result
      * @return 
      */
-    public String writeQuorumDecision(ArrayList<String> result) {
-        return "CIAO";
-        // TODO ANCHE I POST THREAD E GET THREAD!
+    public String writeQuorumDecision(ArrayList<String> resultList) {
+        int count = 0;
+        HashMap<String, Object> object = null;
+        for(int i=0; i<resultList.size(); i++) {
+            object = parseJSON(resultList.get(i));
+            if((boolean)object.get("success")) {
+                    count++;
+                    if(count > resultList.size()/2){
+                        return "{\"success\": true, \"commit_success\": " + second2PCphase((int)object.get("sequence_number"), true) + "}";        
+                    }
+            }
+        }
+        return "{\"success\": false, \"abort_success\": " + second2PCphase((int)object.get("sequence_number"), false) + "}";        
     }
     
     /**
@@ -136,4 +176,23 @@ public class TransactionManager {
             Thread.currentThread().interrupt();
         }
     }
+    
+    /**
+     * This function is used to parse a string containing a JSON object
+     * @param object Stringified JSON object
+     * @return HashMap <String, Object> the value has to be casted to right type to be used
+     */
+    public HashMap<String, Object> parseJSON(String object){
+        //converting json to Map
+        HashMap<String,Object> myMap = new HashMap<String, Object>();
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            myMap = objectMapper.readValue(object, HashMap.class);
+        } catch (IOException ex) {
+            Logger.getLogger(TransactionManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return myMap;
+    }
 }
+
+    
