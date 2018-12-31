@@ -63,7 +63,7 @@ public class TransactionManager {
     /**
      * Strart a quorum read operation in the db
      * @param readPath the URI to use for the request to the db
-     * @return 
+     * @return The value read through the quorum protocol
      */
     public String quorumRead(String readPath) {
         // Prima fase
@@ -77,7 +77,7 @@ public class TransactionManager {
      * Start the first phase of the 2PC, one thread is created for each db replica to send a request
      * @param result the result data to be inserted in the db
      * @param path the URI for the request to the db
-     * @return 
+     * @return List containing the results collected from all replicas
      */
     public ArrayList<String> first2PCphase (TestResult result, String path){
         String url = BASIC_RESOURCE_IDENTIFIER + "collections" + (result == null ? ("/" + path) : "");
@@ -112,9 +112,9 @@ public class TransactionManager {
     
     /**
      * Second phase of the 2PC write, it can be a commit or an abort, one thread is created for each db replica to send a request
-     * @param sequenceNumber
-     * @param commit
-     * @return 
+     * @param sequenceNumber sequence number of the write db operation
+     * @param commit boolean, true for commit, false for abort
+     * @return String containing the outcome of the operation
      */
     public String second2PCphase (int sequenceNumber, boolean commit){
         String ret = SUCCESS_TRUE;
