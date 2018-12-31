@@ -19,7 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * This class manages log file for 2PC db operatiions
  * @author Orazio
  * @author Alessandro
  */
@@ -60,7 +60,7 @@ public class LogManager {
     
     /**
      * Writes an ArrayList of LogEntry in the log file
-     * @param entries
+     * @param entries the Arraylist of LogEntry
      * @return boolean, true if write succeed
      */
     public static boolean writeEntries (ArrayList<LogEntry> entries) {
@@ -93,16 +93,16 @@ public class LogManager {
     
     /**
      * Writes a LogEntry in the log file
-     * @param sequenceNumber
-     * @param collectionName
-     * @param directory
-     * @param cycle
-     * @param meanAdd
-     * @param meanDownload
-     * @param stdDevAdd
-     * @param stdDevDownload
-     * @param state
-     * @param timestamp
+     * @param sequenceNumber sequence number of the db write operation
+     * @param collectionName name of the db collection
+     * @param directory directory of the test result
+     * @param cycle cycle of the test result
+     * @param meanAdd Mean Execution time for the add operations in the submitted test
+     * @param meanDownload Mean Execution time for the downloadoperations in the submitted test
+     * @param stdDevAdd Standard Deviation of Execution time for the add operations in the submitted test
+     * @param stdDevDownload Standard Deviation of Execution time for the download operations in the submitted test
+     * @param state state of the test result
+     * @param timestamp timestamp of the test result
      * @return boolean, true if write succeed
      */
     public static boolean addLogEntry (int sequenceNumber, String collectionName, String directory, int cycle, double meanAdd, double meanDownload, double stdDevAdd, double stdDevDownload, int state, String timestamp) {
@@ -121,7 +121,7 @@ public class LogManager {
     
     /**
      * Check if the log file exists, if not creates it.
-     * @return false if the log file creation failed.
+     * @return boolean, false if the log file creation failed.
      */
     public static boolean checkLogFile() {
         boolean ret = true;

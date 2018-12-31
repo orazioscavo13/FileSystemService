@@ -17,7 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * 
+ * This thread (used for quorum read) sends a GET request to a single replica of the db, setting a timeout for the response
  * @author Orazio
  * @author Alessandro
  */
@@ -26,15 +26,15 @@ public class GetThread implements Callable<String> {
     private int timeout;
     private static final String SUCCESS_FALSE = "{\"success\": false}";
 
+    
     public GetThread(String url, int timeout) {
         this.url = url;
         this.timeout = timeout;
     }
 
     /**
-     * Sends a get request to a single replica manager and waits for response within a specified timeout
+     * Sends a GET request to a single replica manager and waits for response within a specified timeout
      * @return String contining the outcome of the operations
-     * @throws Exception 
      */
     @Override
     public String call() throws Exception {

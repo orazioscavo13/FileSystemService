@@ -17,9 +17,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
 /**
- * REST Web Service
+ * This REST Web Service is used to perform read and write operation on the db based on a quorum protocol 
  *
  * @author Orazio
+ * @author Alessandro
  */
 @Path("mongodb")
 public class DatabaseManagerResource {
@@ -37,7 +38,7 @@ public class DatabaseManagerResource {
 
     /**
      * Retrieves all documents in the specified collection
-     * @param collectionName
+     * @param collectionName the name of the db collection
      * @return string containing the outcome of the operation and the collection's documents
      */
     @GET
@@ -49,7 +50,7 @@ public class DatabaseManagerResource {
     
     /**
      * Retrieves the last document committed in the specified collection
-     * @param collectionName
+     * @param collectionName the name of the db collection
      * @return string containing the outcome of the operation and the last committed document
      */
     @GET
@@ -60,17 +61,17 @@ public class DatabaseManagerResource {
     }
     
     /**
-     * 
-     * @param collectionName
-     * @param directory
-     * @param cycle
-     * @param meanAdd
-     * @param meanDownload
-     * @param stdDevAdd
-     * @param stdDevDownload
-     * @param state
-     * @param timestamp
-     * @return 
+     * Start a 2PC to insert a new entry in the db
+     * @param collectionName the name of the db collection
+     * @param directory directory of the submitted test
+     * @param cycle cycle of the submitted test
+     * @param meanAdd Mean Execution time for the add operations in the submitted test
+     * @param meanDownload Standard Deviation of Execution time for the download operations in the submitted test
+     * @param stdDevAdd Standard Deviation of Execution time for the add operations in the submitted test
+     * @param stdDevDownload Standard Deviation of Execution time for the download operations in the submitted test
+     * @param state state of the submitted test
+     * @param timestamp timestamp of the submitted test
+     * @return string containing the outcome of the operation
      */
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)

@@ -83,7 +83,7 @@ public class ReplicaResource {
       
     /**
      * DELETE method for deleting a collection from the database
-     * @param collectionName
+     * @param collectionName name of the db collection
      * @return string containing the outcome of the operation
      */
     @DELETE
@@ -103,7 +103,7 @@ public class ReplicaResource {
     
     /**
      * Retrieves all documents in the specified collection
-     * @param collectionName
+     * @param collectionName name of the db collection
      * @return string containing the outcome of the operation and the collection's documents
      */
     @GET
@@ -128,7 +128,7 @@ public class ReplicaResource {
     
     /**
      * Retrieves the last document committed in the specified collection
-     * @param collectionName
+     * @param collectionName name of the db collection
      * @return string containing the outcome of the operation and the last committed document
      */
     @GET
@@ -153,16 +153,16 @@ public class ReplicaResource {
     
     /**
      * POST method for adding or creating an element in the log file (for first phase of 2PC)
-     * @param sequenceNumber
-     * @param collectionName
-     * @param directory
-     * @param cycle
-     * @param meanAdd
-     * @param meanDownload
-     * @param stdDevAdd
-     * @param stdDevDownload
-     * @param state
-     * @param timestamp
+     * @param sequenceNumber sequence number of the db write operation
+     * @param collectionName name of the db collection
+     * @param directory directory of the test result
+     * @param cycle cycle of the test result
+     * @param meanAdd Mean Execution time for the add operations in the submitted test
+     * @param meanDownload Mean Execution time for the downloadoperations in the submitted test
+     * @param stdDevAdd Standard Deviation of Execution time for the add operations in the submitted test
+     * @param stdDevDownload Standard Deviation of Execution time for the download operations in the submitted test
+     * @param state state of the test result
+     * @param timestamp timestamp of the test result
      * @return string containing the outcome of the operation
      */
     @POST
@@ -185,7 +185,7 @@ public class ReplicaResource {
         
     /**
      * POST method for commit an element in the database (for second phase of 2PC)
-     * @param sequenceNumber
+     * @param sequenceNumber sequence number of the write db operation
      * @return string containing the outcome of the operation
      */
     @POST
@@ -213,10 +213,10 @@ public class ReplicaResource {
                 }
             }
             
-            // Scrittura sul database
+            // saving into the db
             if(entryToCommit != null && writeDbEntry(entryToCommit)) {
                 
-                // Aggiornamento log se la scrittura sul database ha avuto successo
+                // updating log if write succeds
                 if(LogManager.writeEntries(entries))
                     ret = "{\"success\": true, \"sequence_number\": " + sequenceNumber + "}";
                 else
@@ -230,7 +230,7 @@ public class ReplicaResource {
     
     /**
      * POST method for abort a database operation (for second phase of 2PC)
-     * @param sequenceNumber
+     * @param sequenceNumber sequence number of the write db operation
      * @return string containing the outcome of the operation
      */
     @POST
@@ -271,7 +271,7 @@ public class ReplicaResource {
     
     /**
      * Writes a document in the specified database collection
-     * @param entry
+     * @param entry Log Entry to be moved in the db for the second phase of 2PC
      * @return true if the write operation succeed
      */
     public boolean writeDbEntry(LogEntry entry) {

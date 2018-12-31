@@ -28,16 +28,7 @@ public class TestResult implements Serializable{
     private String timestamp;
     private int state;
 
-    /**
-     * 
-     * @param cycle
-     * @param directory
-     * @param meanAdd
-     * @param meanDownload
-     * @param stdAdd
-     * @param stdDownload
-     * @param state 
-     */
+
     public TestResult(int cycle, String directory, double meanAdd, double meanDownload, double stdAdd, double stdDownload, int state) {
         this.cycle = cycle;
         this.directory = directory;
@@ -49,17 +40,7 @@ public class TestResult implements Serializable{
         this.timestamp = (new SimpleDateFormat("yyyy/MM/dd - HH:mm:ss")).format(new Date());
     }
 
-    /**
-     * 
-     * @param cycle
-     * @param directory
-     * @param meanAdd
-     * @param meanDownload
-     * @param stdAdd
-     * @param stdDownload
-     * @param timestamp
-     * @param state 
-     */
+
     public TestResult(int cycle, String directory, double meanAdd, double meanDownload, double stdAdd, double stdDownload, int state, String timestamp) {
         this.cycle = cycle;
         this.directory = directory;
@@ -106,7 +87,6 @@ public class TestResult implements Serializable{
     /**
      * 
      * @return Serialized Object as a byte
-     * @throws IOException 
      */
     public byte[] serialize() throws IOException{
         ByteArrayOutputStream bos = new ByteArrayOutputStream();

@@ -13,15 +13,13 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
  
 /**
- *
+ * 
  * @author Orazio
+ * @author Alessandro
  */
 public class QueueListener implements ServletContextListener {
  
-    /**
-     *
-     * @param event
-     */
+    
     @Override
     public void contextInitialized(ServletContextEvent event) {
         ResultReceiver receiver;

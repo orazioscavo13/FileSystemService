@@ -19,7 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * This singleton class implements the quorum protocols for db operations, mantaining a unique sequence number
  * @author Orazio
  * @author Alessandro
  */
@@ -45,6 +45,12 @@ public class TransactionManager {
         return instance;
     }
     
+    /**
+     * Strart a 2PC based write operation in the db
+     * @param result the result data to be inserted in the new db entry
+     * @param writePath the URI for the request to the db
+     * @return string containing the outcome of the operation
+     */
     public String twoPhaseCommitWrite(TestResult result, String writePath) {
         sequenceNumber++;
         // Prima fase
@@ -54,6 +60,11 @@ public class TransactionManager {
         return writeQuorumDecision(resultList);
     }
     
+    /**
+     * Strart a quorum read operation in the db
+     * @param readPath the URI to use for the request to the db
+     * @return 
+     */
     public String quorumRead(String readPath) {
         // Prima fase
         ArrayList<String> resultList = first2PCphase(null, readPath);
@@ -62,6 +73,12 @@ public class TransactionManager {
         return readQuorumDecision(resultList);
     }
     
+    /**
+     * Start the first phase of the 2PC, one thread is created for each db replica to send a request
+     * @param result the result data to be inserted in the db
+     * @param path the URI for the request to the db
+     * @return 
+     */
     public ArrayList<String> first2PCphase (TestResult result, String path){
         String url = BASIC_RESOURCE_IDENTIFIER + "collections" + (result == null ? ("/" + path) : "");
         ArrayList<Callable<String>> threadList = new ArrayList<Callable<String>>();
@@ -93,6 +110,12 @@ public class TransactionManager {
         return resultList;
     }
     
+    /**
+     * Second phase of the 2PC write, it can be a commit or an abort, one thread is created for each db replica to send a request
+     * @param sequenceNumber
+     * @param commit
+     * @return 
+     */
     public String second2PCphase (int sequenceNumber, boolean commit){
         String ret = SUCCESS_TRUE;
         String url = BASIC_RESOURCE_IDENTIFIER + "collections/" + (commit ? "commit" : "abort");
@@ -120,9 +143,9 @@ public class TransactionManager {
     
     
     /**
-     * @param resultList
-     * @param result
-     * @return 
+     * Collected results from first phase of 2PC are collected end a commit or an abort is started
+     * @param resultList the results collected in the first phase of 2PC write 
+     * @return string containing the outcome of the operation and the outcome of the commit/abort operation
      */
     public String writeQuorumDecision(ArrayList<String> resultList) {
         int count = 0;
@@ -141,7 +164,7 @@ public class TransactionManager {
     
     /**
      * Scans collected result to reach a read quorum
-     * @param resultList
+     * @param resultList collected results from quorum read
      * @return the string which have reached the quorum, else an error 
      */
     public String readQuorumDecision(ArrayList<String> resultList) {
@@ -161,6 +184,11 @@ public class TransactionManager {
         return SUCCESS_FALSE;
     }
     
+    
+    /**
+     * This method is used to wait the collection of db responses from all threads
+     * @param threadPool the threadpool containing all the threads 
+     */
     public void awaitTerminationAfterShutDown(ExecutorService threadPool) {
         threadPool.shutdown();
         try {
@@ -176,7 +204,7 @@ public class TransactionManager {
     /**
      * This function is used to parse a string containing a JSON object
      * @param object Stringified JSON object
-     * @return HashMap <String, Object> the value has to be casted to right type to be used
+     * @return HashMap containing the object (key-value), the value has to be casted to right type to be used
      */
     public HashMap<String, Object> parseJSON(String object){
         //converting json to Map

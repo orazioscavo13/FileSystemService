@@ -19,7 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * This class is a subscriber for the data produced by automatic test, waits for data coming from rabbitMQ queue
  * @author Orazio
  * @author Alessandro
  */

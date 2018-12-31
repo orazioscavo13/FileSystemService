@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * This thread (used for quorum write) sends a POST request to a single replica of the db, setting a timeout for the response
  * 
  * @author Orazio
  * @author Alessandro
@@ -29,7 +30,15 @@ public class PostThread implements Callable<String> {
     private TestResult result;
     private int sequenceNumber;
     private String collectionName;
-
+    
+    /**
+     * 
+     * @param url the url of the request
+     * @param timeout request timeout
+     * @param result the result of the test to be inserted in the db
+     * @param sequenceNumber sequence number of the db write operation
+     * @param collectionName the name of the db collection
+     */
     public PostThread(String url, int timeout, TestResult result, int sequenceNumber, String collectionName) {
         this.url = url;
         this.timeout = timeout;
@@ -38,6 +47,10 @@ public class PostThread implements Callable<String> {
         this.collectionName = collectionName;
     }
 
+    /**
+     * Sends a POST request to a single replica manager and waits for response within a specified timeout
+     * @return String containing the outcome of the operation
+     */
     @Override
     public String call() throws Exception {
         String ret;
