@@ -45,8 +45,9 @@ Homework1-ejb/nbactions.xml
 Homework1-ejb/nb-configuration.xml
 
 /target/
-/WriteFrontEnd/target/
-/FyleSystemService/Homework1-ear/target/
-/FyleSystemService/Homework1-ejb/target/
-/FyleSystemService/Homework1-web/target/
+/DatabaseManager/target/
+/FileSystemService/Homework1-ear/target/
+/FileSystemService/Homework1-ejb/target/
+/FileSystemService/Homework1-web/target/
 /ReplicaManager/target/
+/FileSystemService/target/
