@@ -62,15 +62,16 @@ git clone https://github.com/orazioscavo13/FileSystemService.git
 ```
 
 #### 2 - Run the RabbitMQ Server
-on windows
+on windows:
 ```bash
 rabbitmq-server start
 ```
-on Linux
+on Linux:
 ```bash
 sudo rabbitmq-server start
 ```
 NB: you will need to enter your password to run the server
+
 
 
 #### 3 - Open the project with Netbeans
