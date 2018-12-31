@@ -61,12 +61,24 @@ Docs/apidoc-ReplicaManager  (Replica Manager documentation)
 git clone https://github.com/orazioscavo13/FileSystemService.git
 ```
 
-#### 2 - Open the project with Netbeans
-#### 3 - Select "Build with Dependencies" on main module (Homework-1), on DatabaseManager module and in ReplicaManager module.
-#### 4 - Run Homework1-ear, ReplicaManager, Database Manager (Follow this order to avoid runtime errors!)
+#### 2 - Run the RabbitMQ Server
+on windows
+```bash
+rabbitmq-server start
+```
+on Linux
+```bash
+sudo rabbitmq-server start
+```
+NB: you will need to enter your password to run the server
 
 
-#### 5 - Select and configure Web Server and environment
+#### 3 - Open the project with Netbeans
+#### 4 - Select "Build with Dependencies" on main module (Homework-1), on DatabaseManager module and in ReplicaManager module.
+#### 5 - Run Homework1-ear, ReplicaManager, Database Manager (Follow this order to avoid runtime errors!)
+
+
+#### 6 - Select and configure Web Server and environment
 When you run the project for the first time you will need to select a web server. 
 
 The project has been successfully tested on Glassfish Server 4.1 on ArchLinux, it may not work properly on some other platform.
