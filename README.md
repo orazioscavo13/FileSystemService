@@ -19,6 +19,10 @@ Docs/apidoc-ejb (EJB documentation)
 
 Docs/apidoc-web  (REST service and web application documentation)
 
+Docs/apidoc-DBManager  (DB Writer/Reader documentation)
+
+Docs/apidoc-ReplicaManager  (Replica Manager documentation)
+
 
 
 ## Screenshots
@@ -33,7 +37,8 @@ Docs/apidoc-web  (REST service and web application documentation)
 
 - Java8EE
 - maven-compiler-plugin 3.1
-
+- MongoDB
+- rabbitMQ-server
 
 
 ## Dependencies
@@ -44,6 +49,8 @@ Docs/apidoc-web  (REST service and web application documentation)
 - `javaee-web-api 7.0`
 - `jersey-container-servlet-core 2.12`
 - `jersey-media-multipart 2.13`
+- `rabbitMQ amqp-client 5.5.1`
+- `mongo-java-driver 3.4.1`
 
 
 
@@ -55,8 +62,8 @@ git clone https://github.com/orazioscavo13/FileSystemService.git
 ```
 
 #### 2 - Open the project with Netbeans
-#### 3 - Select "Build with Dependencies" on main module.
-#### 4 - Run Homework1-ear
+#### 3 - Select "Build with Dependencies" on main module (Homework-1), on DatabaseManager module and in ReplicaManager module.
+#### 4 - Run Homework1-ear, ReplicaManager, Database Manager (Follow this order to avoid runtime errors!)
 
 
 #### 5 - Select and configure Web Server and environment
