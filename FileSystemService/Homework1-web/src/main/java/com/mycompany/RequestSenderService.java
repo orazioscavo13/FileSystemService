@@ -25,7 +25,8 @@ import java.util.logging.Logger;
  * @author Alessandro
  */
 public class RequestSenderService {
-    private final int port = 43636;
+    private final int port = 8080;
+    private final String baseUrl = "http://localhost:";
 
     public RequestSenderService() {
     }
@@ -38,7 +39,7 @@ public class RequestSenderService {
       */
     public long createDirectory(String path){
         HttpURLConnection con = null;
-        String url = "http://localhost:" + port + "/Homework1-web/webresources/filesystem/directories";
+        String url = baseUrl + port + "/Homework1-web/webresources/filesystem/directories";
         String urlParameters = "path=" + path;
         byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
 
@@ -78,7 +79,7 @@ public class RequestSenderService {
      */
     public long uploadFile(String path, String destination){
         //richiesta post (upload file)
-        String url = "http://localhost:" + port + "/Homework1-web/webresources/filesystem/files/";
+        String url = baseUrl + port + "/Homework1-web/webresources/filesystem/files/";
         HttpURLConnection httpConn;
         DataOutputStream UploadRequest = null;
         String boundary =  "*****";
@@ -144,7 +145,7 @@ public class RequestSenderService {
      */
     public long downloadFile(String path){
         HttpURLConnection con = null;
-        String url = "http://localhost:" + port + "/Homework1-web/webresources/filesystem/files/download/" + path;
+        String url = baseUrl + port + "/Homework1-web/webresources/filesystem/files/download/" + path;
         try {
         URL myurl = new URL(url);
         con = (HttpURLConnection) myurl.openConnection();
@@ -179,7 +180,7 @@ public class RequestSenderService {
      */
     public void deleteDirectory(String path) {
         HttpURLConnection con = null;
-        String url = "http://localhost:" + port + "/Homework1-web/webresources/filesystem/directories/"+ path;
+        String url = baseUrl + port + "/Homework1-web/webresources/filesystem/directories/"+ path;
         try {
             URL myurl = new URL(url);
             con = (HttpURLConnection) myurl.openConnection();

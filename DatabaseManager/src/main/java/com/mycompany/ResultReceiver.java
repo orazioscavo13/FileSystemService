@@ -34,6 +34,9 @@ public class ResultReceiver {
         
         public ResultReceiver() throws IOException, TimeoutException{
             factory = new ConnectionFactory();
+            factory.setUsername("user");
+            factory.setPassword("bitnami");
+            factory.setHost("localhost");
             connection = factory.newConnection();
             channel = connection.createChannel();
             transactionManager = TransactionManager.getInstance();
@@ -57,7 +60,6 @@ public class ResultReceiver {
                 }
             };
             
-            factory.setHost("localhost");
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
             System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
             channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -> { });

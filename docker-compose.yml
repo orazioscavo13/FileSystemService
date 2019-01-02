@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  filesystemservice:
+    build: ./FileSystemService/
+    ports:
+     - "8080:8080"
+    depends_on:
+      - rabbitmq
+    restart: always
+  dbmanager:
+    build: ./DatabaseManager/
+    ports:
+     - "43637:8080"
+    depends_on:
+     - replicamanager
+     - rabbitmq
+    restart: always
+  replicamanager:
+    build: ./ReplicaManager/
+    ports: 
+     - "43638:8080"
+    depends_on:
+     - database
+    restart: always
+  database:
+    image: mongo
+    ports:
+     - '27017'
+    restart: always
+  rabbitmq:
+    image: 'bitnami/rabbitmq:latest'
+    ports:
+     - '4369:4369'
+     - '5672:5672'
+     - '25672:25672'
+     - '15672:15672'
+    volumes:
+      - 'rabbitmq_data:/bitnami'
+    restart: always
+volumes:
+  rabbitmq_data:
+    driver: local
