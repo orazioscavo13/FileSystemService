@@ -63,9 +63,7 @@ git clone https://github.com/orazioscavo13/FileSystemService.git
 
 #### 2 - Run the RabbitMQ Server
 on windows:
-```bash
-rabbitmq-server start
-```
+Run "RabbitMQ Service - start" from start menu
 on Linux:
 ```bash
 sudo rabbitmq-server start
@@ -74,7 +72,7 @@ NB: you will need to enter your password to run the server
 
 
 
-#### 3 - Open the project with Netbeans
+#### 3 - Open the project on Netbeans
 #### 4 - Select "Build with Dependencies" on main module (Homework-1), on DatabaseManager module and in ReplicaManager module.
 #### 5 - Run Homework1-ear, ReplicaManager, Database Manager (Follow this order to avoid runtime errors!)
 
