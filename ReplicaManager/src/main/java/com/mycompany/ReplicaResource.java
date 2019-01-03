@@ -118,8 +118,9 @@ public class ReplicaResource {
             Iterator it = iterDoc.iterator(); 
 
             String out = "";
-            while (it.hasNext()) { out = out + ((Document) it.next()).toJson() + (it.hasNext() ? ", " : ""); }
-            ret = "{\"success\": true, \"documents\": [" + out + "]}";
+            int count = 0;
+            while (it.hasNext()) { out = out + ((Document) it.next()).toJson() + (it.hasNext() ? ", " : ""); count++;}
+            ret = "{\"success\": true, \"number\":" + count + ", \"documents\": [" + out + "]}";
         } else
             ret = SUCCESS_FALSE;
         
