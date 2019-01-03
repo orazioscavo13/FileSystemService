@@ -18,6 +18,9 @@ Homework1-web/libs/
 Homework1-web/tmp/
 Homework1-web/node_modules/
 
+DBdata/
+ReplicaManager/dbLog/
+FileSystemService/Storage/
 
 ######################
 # NetBeans
