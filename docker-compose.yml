@@ -23,7 +23,7 @@ services:
     ports: 
      - "43638:8080"
     volumes:
-      - ./ReplicaManager/dbData:/var/lib/mongodb
+      - ./ReplicaManager/dbData:/dbData
       - ./ReplicaManager/dbLog:/dbLog
     restart: always
   rabbitmq:
