@@ -7,7 +7,7 @@
 var app = angular.module('myApp', []);
 app.controller('mainCtrl', function($scope, $http, $httpParamSerializerJQLike) {
 
-    $scope.baseUrl = "http://localhost:43636/Homework1-web/webresources/filesystem/";
+    $scope.baseUrl = "filesystemservice:8080/Homework1-web/webresources/filesystem/";
     $scope.path = "*";
     $scope.pathWithSlash = $scope.path.replace("*", "/");
     $scope.directories = [];

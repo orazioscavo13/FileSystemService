@@ -57,7 +57,8 @@ public class LoadGeneratorServlet extends HttpServlet {
         TestResult result;
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("localhost");
-
+        factory.setUsername("user");
+        factory.setPassword("bitnami");
         // Manipolazione del file system per il test
         try {
             Files.createDirectories(Paths.get("../TesterFiles"));
