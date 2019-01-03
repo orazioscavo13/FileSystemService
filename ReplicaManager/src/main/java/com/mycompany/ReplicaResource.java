@@ -65,7 +65,7 @@ public class ReplicaResource {
         
         try {
             // Creating a Mongo client 
-            mongo = new MongoClient( "database" , 27017 ); 
+            mongo = new MongoClient( "localhost" , 27017 ); 
 
             // Creating Credentials 
             credential = MongoCredential.createCredential("FSDatabaseManagerAdmin", "FileSyistemDB", "password".toCharArray()); 

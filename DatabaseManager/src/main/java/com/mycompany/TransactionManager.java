@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  * @author Alessandro
  */
 public class TransactionManager {
-    private static final String BASIC_RESOURCE_IDENTIFIER = "ReplicaManager/webresources/mongodb/"; 
+    private static final String BASIC_RESOURCE_IDENTIFIER = "ReplicaManager-1.0-SNAPSHOT/webresources/mongodb/"; 
     private static final String SUCCESS_FALSE = "{\"success\": false}";
     private static final String SUCCESS_TRUE = "{\"success\": true}";
     private static final int TIMEOUT = 3000; 
@@ -35,7 +35,7 @@ public class TransactionManager {
     private TransactionManager() {
         this.sequenceNumber = 0;
         replicaList = new ArrayList<String>();
-        replicaList.add("http://localhost:43636/");
+        replicaList.add("http://replicamanager:8080/");
     }
     
     public static TransactionManager getInstance() {

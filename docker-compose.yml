@@ -7,6 +7,8 @@ services:
      - "8080:8080"
     depends_on:
       - rabbitmq
+    volumes:
+      - ./FileSystemService/Storage:/FileSystemService
     restart: always
   dbmanager:
     build: ./DatabaseManager/
@@ -20,13 +22,9 @@ services:
     build: ./ReplicaManager/
     ports: 
      - "43638:8080"
-    depends_on:
-     - database
-    restart: always
-  database:
-    image: mongo
-    ports:
-     - '27017'
+    volumes:
+      - ./ReplicaManager/dbData:/var/lib/mongodb
+      - ./ReplicaManager/dbLog:/dbLog
     restart: always
   rabbitmq:
     image: 'bitnami/rabbitmq:latest'

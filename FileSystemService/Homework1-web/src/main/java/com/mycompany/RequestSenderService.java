@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  */
 public class RequestSenderService {
     private final int port = 8080;
-    private final String baseUrl = "filesystemservice:";
+    private final String baseUrl = "http://localhost:";
 
     public RequestSenderService() {
     }
