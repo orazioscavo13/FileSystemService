@@ -1,4 +1,4 @@
-FROM filesystemservice/glassfish_mongo
+FROM orazioscavo13/glassfish_mongo:1.0
 
 COPY target/ReplicaManager-1.0-SNAPSHOT.war /
 COPY start.sh /

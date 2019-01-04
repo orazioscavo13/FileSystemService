@@ -143,7 +143,7 @@ public class ReplicaResource {
             iterDoc.sort(new BasicDBObject("_id", -1));
             Iterator it = iterDoc.iterator();
             if(it.hasNext()) { 
-                ret = "{\"success\": true, \"lastCommittedDocument\": " + it.next() + "}";
+                ret = "{\"success\": true, \"lastCommittedDocument\": " + ((Document) it.next()).toJson() + "}";
             } else
                 ret = SUCCESS_FALSE;
         } else

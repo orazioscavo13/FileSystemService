@@ -1,6 +1,5 @@
 #!/bin/sh
 
-service mongodb start
 mongod --dbpath /dbData &
 /usr/local/glassfish4/bin/asadmin start-domain
 /usr/local/glassfish4/bin/asadmin deploy /ReplicaManager-1.0-SNAPSHOT.war
