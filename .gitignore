@@ -18,8 +18,7 @@ Homework1-web/libs/
 Homework1-web/tmp/
 Homework1-web/node_modules/
 
-ReplicaManager/dbData/
-ReplicaManager/dbLog/
+ReplicaManager/Replicas_volumes
 FileSystemService/Storage/
 
 ######################
