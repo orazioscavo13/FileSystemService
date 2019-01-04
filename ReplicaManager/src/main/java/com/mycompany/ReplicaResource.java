@@ -15,6 +15,8 @@ import com.mongodb.MongoWriteException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import static com.mongodb.client.model.Projections.excludeId;
+import static com.mongodb.client.model.Projections.fields;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -68,7 +70,7 @@ public class ReplicaResource {
             mongo = new MongoClient( "localhost" , 27017 ); 
 
             // Creating Credentials 
-            credential = MongoCredential.createCredential("FSDatabaseManagerAdmin", "FileSyistemDB", "password".toCharArray()); 
+            credential = MongoCredential.createCredential("FSDatabaseManagerAdmin", "FileSystemDB", "password".toCharArray()); 
             System.out.println("Connected to the database successfully");  
 
             // Accessing the database 
@@ -114,7 +116,7 @@ public class ReplicaResource {
         if(connect()) {
             BasicDBObject searchQuery = new BasicDBObject();
             MongoCollection<Document> collection = database.getCollection(collectionName);
-            FindIterable<Document> iterDoc = collection.find();
+            FindIterable<Document> iterDoc = collection.find().projection(fields(excludeId()));
             Iterator it = iterDoc.iterator(); 
 
             String out = "";

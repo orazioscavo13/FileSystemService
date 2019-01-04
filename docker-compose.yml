@@ -10,22 +10,65 @@ services:
     volumes:
       - ./FileSystemService/Storage:/FileSystemService
     restart: always
+
   dbmanager:
     build: ./DatabaseManager/
     ports:
      - "43637:8080"
     depends_on:
-     - replicamanager
+     - replicamanager_1
+     - replicamanager_2
+     - replicamanager_3
+     - replicamanager_4
+     - replicamanager_5
      - rabbitmq
     restart: always
-  replicamanager:
+
+  replicamanager_1:
     build: ./ReplicaManager/
     ports: 
      - "43638:8080"
     volumes:
-      - ./ReplicaManager/dbData:/dbData
-      - ./ReplicaManager/dbLog:/dbLog
+      - ./ReplicaManager/Replicas_volumes/Replica_1/dbData:/dbData
+      - ./ReplicaManager/Replicas_volumes/Replica_1/dbLog:/dbLog
     restart: always
+
+  replicamanager_2:
+    build: ./ReplicaManager/
+    ports: 
+     - "43639:8080"
+    volumes:
+      - ./ReplicaManager/Replicas_volumes/Replica_2/dbData:/dbData
+      - ./ReplicaManager/Replicas_volumes/Replica_2/dbLog:/dbLog
+    restart: always
+
+  replicamanager_3:
+    build: ./ReplicaManager/
+    ports: 
+     - "43640:8080"
+    volumes:
+      - ./ReplicaManager/Replicas_volumes/Replica_3/dbData:/dbData
+      - ./ReplicaManager/Replicas_volumes/Replica_3/dbLog:/dbLog
+    restart: always
+
+  replicamanager_4:
+    build: ./ReplicaManager/
+    ports: 
+     - "43641:8080"
+    volumes:
+      - ./ReplicaManager/Replicas_volumes/Replica_4/dbData:/dbData
+      - ./ReplicaManager/Replicas_volumes/Replica_4/dbLog:/dbLog
+    restart: always
+
+  replicamanager_5:
+    build: ./ReplicaManager/
+    ports: 
+     - "43642:8080"
+    volumes:
+      - ./ReplicaManager/Replicas_volumes/Replica_5/dbData:/dbData
+      - ./ReplicaManager/Replicas_volumes/Replica_5/dbLog:/dbLog
+    restart: always
+
   rabbitmq:
     image: 'bitnami/rabbitmq:latest'
     ports:

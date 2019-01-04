@@ -35,7 +35,11 @@ public class TransactionManager {
     private TransactionManager() {
         this.sequenceNumber = 0;
         replicaList = new ArrayList<String>();
-        replicaList.add("http://replicamanager:8080/");
+        replicaList.add("http://replicamanager_1:8080/");
+        replicaList.add("http://replicamanager_2:8080/");
+        replicaList.add("http://replicamanager_3:8080/");
+        replicaList.add("http://replicamanager_4:8080/");
+        replicaList.add("http://replicamanager_5:8080/");
     }
     
     public static TransactionManager getInstance() {
