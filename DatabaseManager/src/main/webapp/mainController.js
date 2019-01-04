@@ -36,7 +36,7 @@ app.controller('mainCtrl', function($scope, $http, $httpParamSerializerJQLike) {
 
     $scope.insertDocument = function(collectionName, directory, cycle, meanAdd, meanDownload, stdDevAdd, stdDevDownload, state) {
         if(collectionName != null) {
-            $http.post($scope.baseUrl + "collections/commit", $httpParamSerializerJQLike({collection_name: collectionName, directory: directory, cycle: cycle, mean_add: meanAdd, mean_download: meanDownload, stddev_add: stdDevAdd, stddev_download: stdDevDownload, state: state, timestamp: moment().format("yyyy/MM/dd - HH:mm:ss")}), {headers:{'Content-Type': 'application/x-www-form-urlencoded'}}).then(function(resp) {
+            $http.post($scope.baseUrl + "collections/write", $httpParamSerializerJQLike({collection_name: collectionName, directory: directory, cycle: cycle, mean_add: meanAdd, mean_download: meanDownload, stddev_add: stdDevAdd, stddev_download: stdDevDownload, state: state, timestamp: moment().format("yyyy/MM/dd - HH:mm:ss")}), {headers:{'Content-Type': 'application/x-www-form-urlencoded'}}).then(function(resp) {
                 $scope.getDirectories($scope.path);
                 console.log(resp);
             });    
