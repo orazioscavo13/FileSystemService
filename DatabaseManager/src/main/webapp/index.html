@@ -130,7 +130,7 @@
                                     <h6>Nessun output da mostrare</h6>
                                 </div>
                                 <div ng-show="queryOutput != null">
-                                    <pre ng-bind-html="queryOutput"></pre>
+                                    <pre ng-bind-html-unsafe="queryOutput"></pre>
                                 </div>
                             </div>
                         </div>
