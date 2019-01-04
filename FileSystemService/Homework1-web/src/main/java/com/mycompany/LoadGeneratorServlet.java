@@ -31,6 +31,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -150,7 +152,7 @@ public class LoadGeneratorServlet extends HttpServlet {
                 } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(LoadGeneratorServlet.class.getName()).log(Level.SEVERE, null, ex);
                 } 
-                result = new TestResult(n+1, "Directory_" + i, getMean(exeTimeAdd, 5), getMean(exeTimeDownload, 10), getStdDev(exeTimeAdd, 5), getStdDev(exeTimeDownload, 10), operationOutcome(exeTimeAdd, exeTimeDownload));
+                result = new TestResult(n+1, "Directory_" + i, getMean(exeTimeAdd, 5), getMean(exeTimeDownload, 10), getStdDev(exeTimeAdd, 5), getStdDev(exeTimeDownload, 10), operationOutcome(exeTimeAdd, exeTimeDownload), (new SimpleDateFormat("yyyy/MM/dd - HH:mm:ss")).format(new Date()));
                 table = table +  
             "               <tr>\n" + 
             "                    <td>\n" +

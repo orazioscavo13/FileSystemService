@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  *
@@ -27,19 +25,6 @@ public class TestResult implements Serializable{
     private double stdDownload;
     private String timestamp;
     private int state;
-
-
-    public TestResult(int cycle, String directory, double meanAdd, double meanDownload, double stdAdd, double stdDownload, int state) {
-        this.cycle = cycle;
-        this.directory = directory;
-        this.meanAdd = meanAdd;
-        this.meanDownload = meanDownload;
-        this.stdAdd = stdAdd;
-        this.stdDownload = stdDownload;
-        this.state = state;
-        this.timestamp = (new SimpleDateFormat("yyyy/MM/dd - HH:mm:ss")).format(new Date());
-    }
-
 
     public TestResult(int cycle, String directory, double meanAdd, double meanDownload, double stdAdd, double stdDownload, int state, String timestamp) {
         this.cycle = cycle;
@@ -87,6 +72,7 @@ public class TestResult implements Serializable{
     /**
      * 
      * @return Serialized Object as a byte
+     * @throws java.io.IOException
      */
     public byte[] serialize() throws IOException{
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
