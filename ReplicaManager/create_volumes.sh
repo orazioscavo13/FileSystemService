@@ -1,5 +1,4 @@
 mkdir Replicas_volumes
-chmod -R a=rwx Replicas_volumes
 
 mkdir Replicas_volumes/Replica_1
 mkdir Replicas_volumes/Replica_1/dbLog
@@ -23,3 +22,4 @@ mkdir Replicas_volumes/Replica_5/dbLog
 mkdir Replicas_volumes/Replica_5/dbData
 
 
+chmod -R a=rwx Replicas_volumes

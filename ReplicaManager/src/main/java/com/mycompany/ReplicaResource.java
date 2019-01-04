@@ -141,8 +141,7 @@ public class ReplicaResource {
         String ret;
         if(connect()) {
             MongoCollection<Document> collection = database.getCollection(collectionName);
-            FindIterable<Document> iterDoc = collection.find(new BasicDBObject()).projection(fields(excludeId()));
-            iterDoc.sort(new BasicDBObject("_id", -1));
+            FindIterable<Document> iterDoc = collection.find(new BasicDBObject()).sort(new BasicDBObject("_id", -1)).projection(fields(excludeId()));
             Iterator it = iterDoc.iterator();
             if(it.hasNext()) { 
                 ret = "{\"success\": true, \"lastCommittedDocument\": " + ((Document) it.next()).toJson() + "}";
