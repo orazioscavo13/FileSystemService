@@ -10,7 +10,6 @@ app.controller('mainCtrl', function($scope, $http, $httpParamSerializerJQLike) {
     $scope.replicaNumber = 5;
     $scope.queryOutput = null;
     $scope.inputs = {doc: {}};
-    //TODO: Da cambiare per dicoker
     $scope.baseUrl = "http://localhost:43637/DatabaseManager-1.0-SNAPSHOT/webresources/mongodb/";
 
 
