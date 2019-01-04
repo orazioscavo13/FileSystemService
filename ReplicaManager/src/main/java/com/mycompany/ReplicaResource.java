@@ -141,7 +141,7 @@ public class ReplicaResource {
         String ret;
         if(connect()) {
             MongoCollection<Document> collection = database.getCollection(collectionName);
-            FindIterable<Document> iterDoc = collection.find(new BasicDBObject());
+            FindIterable<Document> iterDoc = collection.find(new BasicDBObject()).projection(fields(excludeId()));
             iterDoc.sort(new BasicDBObject("_id", -1));
             Iterator it = iterDoc.iterator();
             if(it.hasNext()) { 
