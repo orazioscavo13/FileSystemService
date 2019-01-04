@@ -19,7 +19,7 @@ app.controller('mainCtrl', function($scope, $http, $httpParamSerializerJQLike) {
     /* === DIRECTORIES REST === */
 
     $scope.createDirectory = function(directoryName) {
-        if(directoryName!=null) {
+        if(directoryName!=null && !directoryExists(directoryName)) {
             $http.post($scope.baseUrl + "directories", $httpParamSerializerJQLike({path: $scope.path + "*" + directoryName}), {headers:{'Content-Type': 'application/x-www-form-urlencoded'}}).then(function(resp) {
                 $scope.getDirectories($scope.path);
                 console.log(resp);
@@ -100,6 +100,14 @@ app.controller('mainCtrl', function($scope, $http, $httpParamSerializerJQLike) {
         $scope.path = $scope.path == "*" ? "*" : $scope.path.substring(0, $scope.path.length-1);
         $scope.getDirectories($scope.path);
     };
+    
+    $scope.directoryExists = function(directoryName) {
+        for(var i = 0; i<$scope.directories.length; i++) {
+            if($scope.directories[i].name == directoryName)
+                return true;
+        }
+        return false;
+    }
     
     $scope.getDirectories($scope.path);
 });
