@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  * @author Alessandro
  */
 public class LogManager {
-    private static final String BASIC_LOG_PATH = "../../../../../../../dbLog";
+    private static final String BASIC_LOG_PATH = "../dbLog";
     private static final String LOG_PATH = BASIC_LOG_PATH + "/replicaLog.log";
     
     /**

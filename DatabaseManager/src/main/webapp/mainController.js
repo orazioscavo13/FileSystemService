@@ -11,7 +11,7 @@ app.controller('mainCtrl', function($scope, $http, $httpParamSerializerJQLike) {
     $scope.queryOutput = null;
     $scope.inputs = {doc: {}};
     $scope.bLoading = false;
-    $scope.baseUrl = "http://localhost:43637/DatabaseManager-1.0-SNAPSHOT/webresources/mongodb/";
+    $scope.baseUrl = "http://localhost:43636/DatabaseManager/webresources/mongodb/";
 
 
     /* === COLLECTION REST === */

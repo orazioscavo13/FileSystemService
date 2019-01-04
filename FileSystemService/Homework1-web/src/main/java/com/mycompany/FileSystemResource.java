@@ -44,7 +44,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 @RequestScoped
 public class FileSystemResource {
 
-    private final String basePath = "../../../../../../../FileSystemService/";
+    private final String basePath = "../FileSystemService/";
 
     
     com.mycompany.DirectoryBeanLocal directoryBean = lookupDirectoryBeanLocal();
@@ -69,7 +69,7 @@ public class FileSystemResource {
     private DirectoryBeanLocal lookupDirectoryBeanLocal() {
         try {
             javax.naming.Context c = new InitialContext();
-            return (com.mycompany.DirectoryBeanLocal) c.lookup("java:global/Homework1-ear-1.0-SNAPSHOT/Homework1-ejb-1.0-SNAPSHOT/DirectoryBean!com.mycompany.DirectoryBeanLocal");
+            return (com.mycompany.DirectoryBeanLocal) c.lookup("java:global/Homework1-ear/Homework1-ejb-1.0-SNAPSHOT/DirectoryBean!com.mycompany.DirectoryBeanLocal");
         } catch (NamingException ne) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, "exception caught", ne);
             throw new RuntimeException(ne);

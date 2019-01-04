@@ -58,9 +58,7 @@ public class LoadGeneratorServlet extends HttpServlet {
         // Apre la connessione alla coda RabbitMQ
         TestResult result;
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("rabbitmq");
-        factory.setUsername("user");
-        factory.setPassword("bitnami");
+        factory.setHost("localhost");
         // Manipolazione del file system per il test
         try {
             Files.createDirectories(Paths.get("../TesterFiles"));

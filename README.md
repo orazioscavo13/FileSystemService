@@ -26,7 +26,6 @@ Docs/apidoc-ReplicaManager  (Replica Manager documentation)
 
 
 ## Screenshots
-![screenshot](screenshots/1.png)
 
 
 ![screenshot](screenshots/2.png)
