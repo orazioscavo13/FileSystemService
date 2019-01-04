@@ -19,7 +19,7 @@ app.controller('mainCtrl', function($scope, $http, $httpParamSerializerJQLike) {
     /* === DIRECTORIES REST === */
 
     $scope.createDirectory = function(directoryName) {
-        if(directoryName!=null && !directoryExists(directoryName)) {
+        if(directoryName!=null && !$scope.directoryExists(directoryName)) {
             $http.post($scope.baseUrl + "directories", $httpParamSerializerJQLike({path: $scope.path + "*" + directoryName}), {headers:{'Content-Type': 'application/x-www-form-urlencoded'}}).then(function(resp) {
                 $scope.getDirectories($scope.path);
                 console.log(resp);
