@@ -3,8 +3,148 @@
     <head>
         <title>Start Page</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+        <!-- Font awesome import -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
+        
+        <!-- Bootstrap import -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        
+        <!-- AngularJs import -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+        
+        <!-- MomentJs import -->
+        <script src="moment.js"></script>
+        
+        
+        <!-- main css -->
+        <link rel="stylesheet" href="main.css">
+        
+        <!-- main controller import -->
+        <script src="mainController.js"></script>
+
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <div ng-app="myApp" ng-controller="mainCtrl"> 
+            <div style="text-align:center; padding:20px;" class="d-flex align-items-center justify-content-between">
+                <div class="d-flex">
+                    <img style="width:45px; height: 45px;" src="res/database.svg">
+                    <h1 class="mb-0 ml-2">Database Manager</h1>
+                </div>
+                <div>
+                    <a href="https://github.com/orazioscavo13/FileSystemService"><button class="btn btn-success">Go to Official Repo (GIT)</button></a>
+                </div>
+            </div>
+            <hr class="m-0">
+            <div style="text-align:center; padding: 20px;">
+                <div class="row m-0">
+                    <div class="col-md-12 d-flex m-0 alert alert-dark" style="border-radius: 5px 5px 0px 0px;">
+                        <h3 class="m-0">Replicas managed: <span class="text-primary">{{replicaNumber}}</span></h3>
+                    </div>
+                    
+                    <!-- DATABASE QUERY -->
+                    <div class="col-md-6 card p-0 border-radius-0 h-100">
+                        <div class="card-header d-flex align-items-center justify-content-between py-2">
+                            <h4 class="m-0">Database Query</h4>
+                        </div>
+                        <div class="card-body" style="overflow:auto; height: calc(100vh - 300px);">
+                            <div class="h-100">
+                                <ul class="w-100 h-100 p-0 m-0">
+                                    <li class="d-flex align-items-center justify-content-between list-group-item py-2">
+                                        <div><span>Leggi un'intera collezione <span class='ml-1 text-danger'>*</span></div>
+                                        <div class="form-group m-0 d-flex ml-auto">
+                                            <input type="text" class="form-control form-control-sm" placeholder="Nome collezione" name="readCollectionName" ng-model="inputs.readCollectionName">
+                                            <button type="button" class="btn btn-secondary btn-sm ml-2" ng-click="readCollection(inputs.readCollectionName)" ng-class="{'disabled cursor-not-allowed': (inputs.readCollectionName==null || inputs.readCollectionName=='')}">Invia <span class="ml-1 fa fa-arrow-circle-right"></span></button>
+                                        </div>
+                                    </li>
+                                    <li class="d-flex align-items-center justify-content-between list-group-item py-2">
+                                        <div><span>Leggi ultimo documento committato <span class='ml-1 text-danger'>*</span></span></div>
+                                        <div class="form-group m-0 d-flex ml-auto">
+                                            <input type="text" class="form-control form-control-sm" placeholder="Nome collezione" name="readLastDocCollectionName" ng-model="inputs.readLastDocCollectionName">
+                                            <button type="button" class="btn btn-secondary btn-sm ml-2" ng-click="readLastCommittedDocumentFromCollection(inputs.readLastDocCollectionName)" ng-class="{'disabled cursor-not-allowed': (inputs.readLastDocCollectionName==null || inputs.readLastDocCollectionName=='')}">Invia <span class="ml-1 fa fa-arrow-circle-right"></span></button>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item py-2">
+                                        <div class="row m-0 d-flex align-items-center justify-content-between">
+                                            <div><span>Inserisci documento in una collezione <span class='ml-1 text-danger'>*</span></div>
+                                            <div class="form-group m-0 d-flex ml-auto">
+                                                <input type="text" class="form-control form-control-sm" placeholder="Nome collezione" name="writeCollectionName" ng-model="inputs.writeCollectionName">
+                                                <button type="button" class="btn btn-secondary btn-sm ml-2" ng-click="insertDocument(inputs.writeCollectionName, inputs.doc.directoryName, inputs.doc.cycle, inputs.doc.meanAdd, inputs.doc.meanDownload, inputs.doc.stddevAdd, inputs.doc.stddevDownload, inputs.doc.state)" ng-class="{'disabled cursor-not-allowed': (inputs.writeCollectionName==null || inputs.writeCollectionName=='')}"><span class="fa fa-right-arrow"></span>Invia <span class="ml-1 fa fa-arrow-circle-right"></span></button>
+                                            </div>
+                                        </div>
+                                        <div class="row mx-0 my-2 card">
+                                            <div class="card-header text-left px-2 py-1"><span>Documento</span></div>
+                                            <div class="card-body row m-0 px-2 py-1">
+                                                <div class="form-group m-0 col-3 text-left pl-0">
+                                                    <label class="text-muted col-form-label-sm p-0 m-0">Nome directory</label>
+                                                    <input type="text" class="form-control form-control-sm" placeholder="Directory" name="directoryName" ng-model="inputs.doc.directoryName">
+                                                </div>
+                                                <div class="form-group m-0 col-3 text-left pl-0">
+                                                    <label class="text-muted col-form-label-sm p-0 m-0">Ciclo</label>
+                                                    <input type="number" min='0' class="form-control form-control-sm" placeholder="Ciclo" name="cycle" ng-model="inputs.doc.cycle">
+                                                </div>
+                                                <div class="form-group m-0 col-3 text-left pl-0">
+                                                    <label class="text-muted col-form-label-sm p-0 m-0">Media Add</label>
+                                                    <input type="number" class="form-control form-control-sm" placeholder="Media Add" name="meanAdd" ng-model="inputs.doc.meanAdd">
+                                                </div>
+                                                <div class="form-group m-0 col-3 text-left pl-0">
+                                                    <label class="text-muted col-form-label-sm p-0 m-0">Media Download</label>
+                                                    <input type="number" class="form-control form-control-sm" placeholder="Media Download" name="meanDownload" ng-model="inputs.doc.meanDownload">
+                                                </div>
+                                                <div class="form-group m-0 col-3 text-left pl-0 pt-2">
+                                                    <label class="text-muted col-form-label-sm p-0 m-0">Dev std add</label>
+                                                    <input type="number" class="form-control form-control-sm" placeholder="Dev std Add" name="stddevAdd" ng-model="inputs.doc.stddevAdd">
+                                                </div>
+                                                <div class="form-group m-0 col-3 text-left pl-0 pt-2">
+                                                    <label class="text-muted col-form-label-sm p-0 m-0">Dev std download</label>
+                                                    <input type="number" class="form-control form-control-sm" placeholder="Dev std Download" name="stddevDownload" ng-model="inputs.doc.stddevDownload">
+                                                </div>
+                                                <div class="form-group m-0 col-3 text-left pl-0 pt-2">
+                                                    <label class="text-muted col-form-label-sm p-0 m-0">Stato</label>
+                                                    <input type="number" min='0' max='1' class="form-control form-control-sm" placeholder="Stato" name="state" ng-model="inputs.doc.state">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                             <div class="d-flex align-items-center justify-content-start">
+                                 <span><span class='mr-1 text-danger'>*</span>Inserire <em>testResult</em> come nome collezione per lavorare con la collezione dei test</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- QUERY RESULT -->
+                    <div class="col-md-6 card p-0 border-radius-0 h-100">
+                        <div class="card-header d-flex align-items-center justify-content-between py-2">
+                            <h4 class="m-0">Query Output</h4>
+                        </div>
+                        <div class="card-body" style="overflow:auto; height: calc(100vh - 300px);">
+                            <div class="h-100">
+                                <div ng-show="queryOutput == null && !bLoading">
+                                    <h6>Nessun output da mostrare</h6>
+                                </div>
+                                <div ng-show="bLoading" class="w-100 h-100 align-items-center d-flex justify-content-center">
+                                    <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+                                </div>
+                                <div ng-show="queryOutput != null && !bLoading">
+                                    <pre id="output" class="text-left"></pre>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                             <div class="d-flex align-items-center justify-content-start">
+                                 <span>&nbsp;</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

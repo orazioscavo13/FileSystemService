@@ -35,7 +35,7 @@ import javax.ws.rs.core.StreamingOutput;
 @Stateless
 public class DirectoryBean implements DirectoryBeanLocal {
     
-    private final String basePath = "../FileSystemService/";
+    private final String basePath = "../../../../../../../FileSystemService/";
 
     
     /* === DIRECTORIES METHODS === */

@@ -34,7 +34,9 @@ public class ResultReceiver {
         
         public ResultReceiver() throws IOException, TimeoutException{
             factory = new ConnectionFactory();
-            factory.setHost("localhost");
+            factory.setHost("rabbitmq");
+            factory.setUsername("user");
+            factory.setPassword("bitnami");
             connection = factory.newConnection();
             channel = connection.createChannel();
             transactionManager = TransactionManager.getInstance();

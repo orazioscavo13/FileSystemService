@@ -18,6 +18,8 @@ Homework1-web/libs/
 Homework1-web/tmp/
 Homework1-web/node_modules/
 
+ReplicaManager/Replicas_volumes
+FileSystemService/Storage/
 
 ######################
 # NetBeans
@@ -44,10 +46,10 @@ Homework1-ejb/nbdist/
 Homework1-ejb/nbactions.xml
 Homework1-ejb/nb-configuration.xml
 
-/target/
-/DatabaseManager/target/
-/FileSystemService/Homework1-ear/target/
-/FileSystemService/Homework1-ejb/target/
-/FileSystemService/Homework1-web/target/
-/ReplicaManager/target/
-/FileSystemService/target/
+target/
+DatabaseManager/target/
+FileSystemService/Homework1-ear/target/
+FileSystemService/Homework1-ejb/target/
+FileSystemService/Homework1-web/target/
+ReplicaManager/target/
+FileSystemService/target/
