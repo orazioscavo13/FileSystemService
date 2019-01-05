@@ -175,7 +175,7 @@ public class FileSystemResource {
     }
     
     /**
-     * 
+     * Replace specific file in the filesystem (A file with the same name of the one uploaded must exixst in the specified destination)
      * @param fileInputStream inputstream from the file to be updated
      * @param fileMetaData file informations
      * @param destination path of the file to be updated with '*' instead of '/'

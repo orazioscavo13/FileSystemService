@@ -41,7 +41,7 @@ public class DirectoryBean implements DirectoryBeanLocal {
     /* === DIRECTORIES METHODS === */
     
     /**
-     * 
+     * Create a new directory in the filesystem
      * @param path the path for the new directory with '*' instead of '/'
      * @return string containing the outcome of the operation
      */
@@ -57,7 +57,7 @@ public class DirectoryBean implements DirectoryBeanLocal {
         return "{\"success\": false, \"message\": \"Invalid Path\"}";
     }
     /**
-     * 
+     * Delete specified directory from Filesystem
      * @param path the path of the directory with '*' instead of '/'
      * @return string containing the outcome of the operation
      */
@@ -90,7 +90,7 @@ public class DirectoryBean implements DirectoryBeanLocal {
     }
     
     /**
-     *
+     * Retrieves a list of directories in the specified path
      * @param path path of the directory with '*' instead of '/' 
      * @return List of all the directories in the Specified Directory
      */
@@ -119,7 +119,7 @@ public class DirectoryBean implements DirectoryBeanLocal {
     /* === FILES METHODS === */
     
     /**
-     * 
+     * Delete a file specified in the path from the filesystem 
      * @param path the path of the file with '*' instead of '/'
      * @return string containing the outcome of the operation
      */
@@ -141,7 +141,7 @@ public class DirectoryBean implements DirectoryBeanLocal {
     }
     
     /**
-     * 
+     * Retrieves a list of files in the specified path
      * @param path path of the directory with '*' instead of '/' 
      * @return List of all the files in the Specified Directory
      */
@@ -165,7 +165,7 @@ public class DirectoryBean implements DirectoryBeanLocal {
     }
     
     /**
-     * 
+     * Get specific file from the filesystem
      * @param path the path of the requested file
      * @return the requested file
      */
@@ -201,7 +201,7 @@ public class DirectoryBean implements DirectoryBeanLocal {
     }
     
     /**
-     * 
+     * Replace specific file in the filesystem (A file with the same name of the one uploaded must exixst in the specified destination)
      * @param fileInputStream inputstream from the file to be updated
      * @param filename the name of the file to be updated
      * @param destination path of the file to be updated
@@ -217,7 +217,7 @@ public class DirectoryBean implements DirectoryBeanLocal {
     }
     
     /**
-     * 
+     * Upload a new file in the filesystem
      * @param fileInputStream inputstream from the file to be uploaded
      * @param filename the name of the file
      * @param destination destination for the file in the remote filesystem (path with '*' instead of '/')
@@ -236,7 +236,7 @@ public class DirectoryBean implements DirectoryBeanLocal {
     /* === OTHERS === */
 
     /**
-     * 
+     * Write uploaded file into his new destination in the filesystem
      * @param fileInputStream
      * @param path destination path for the uploaded file
      * @return string containing the outcome of operation
@@ -264,7 +264,7 @@ public class DirectoryBean implements DirectoryBeanLocal {
     }
     
     /**
-     * 
+     * Replace all the '*' in the given string with '/' to get a valid path
      * @param url the url to be converted
      * @return the converted url (with '/' instead of '*')
      */
