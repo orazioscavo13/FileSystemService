@@ -54,7 +54,7 @@ Javadoc is available at:
 
 
 
-## Running for Test
+## Running for Test (without **docker**)
 You can clone this project and simply run it without starting any docker container, so you can work on it and test it easily and quickly.
 #### 1 - Clone the project from develop branch
 ```bash
@@ -108,7 +108,7 @@ Now you can navigate to:
 >NB: The port can be different, look at point 6
 
 
-## Running for Production
+## Running for Production (with **docker**)
 
 #### 1 - Clone the project from master branch
 ```bash
