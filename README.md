@@ -1,3 +1,4 @@
+
 # FileSystemService
 A web service for remote filesystem management.
 
@@ -15,13 +16,13 @@ A web service for remote filesystem management.
 
 Javadoc is available at:
 
-Docs/apidoc-EJB (EJB documentation)
+- Docs/apidoc-EJB (**EJB** documentation)
 
-Docs/apidoc-WEB  (REST service and web application documentation)
+- Docs/apidoc-WEB  (**REST service** and **web application** documentation)
 
-Docs/apidoc-DBmanager  (DB Writer/Reader documentation)
+- Docs/apidoc-DBanager  (**DB Writer/Reader** documentation)
 
-Docs/apidoc-ReplicaManager  (Replica Manager documentation)
+- Docs/apidoc-ReplicaManager  (**Replica Manager** documentation)
 
 
 
@@ -55,41 +56,41 @@ Docs/apidoc-ReplicaManager  (Replica Manager documentation)
 
 ## Running for Test
 You can clone this project and simply run it without starting any docker container, so you can work on it and test it easily and quickly.
-#### 1 - Download or clone the project from develop branch
+#### 1 - Clone the project from develop branch
 ```bash
 git clone --branch develop https://github.com/orazioscavo13/FileSystemService.git
 ```
 
 #### 2 - Run the RabbitMQ Server
-on windows:
-Run "RabbitMQ Service - start" from start menu
+- on Windows:
+Run **RabbitMQ Service - start** from start menu
 
-on Linux:
-```bash
+- on Linux:
+ ```bash
 sudo rabbitmq-server start
 ```
-NB: you will need to enter your password to run the server
+> NB: you will need to enter your password to run the server
 
 
 #### 3 - Run the Database
-on windows:
-Go to installation folder and run 'mongo.exe'
+- on Windows:
+Go to Mongodb installation folder and run **mongo.exe**
 
-on Linux:
+- on Linux:
 ```bash
 sudo systemctl start mongodb.service
 ```
-NB: The command can change depending on the distribution
+>NB: The command can change depending on the distribution
 
 #### 4 - Build the project
 - Open projects on Netbeans (Homework1, DatabaseManager, ReplicaManager)
-- In the 'projects' panel, right click and select "Build with Dependencies" on main module (Homework-1), on DatabaseManager module and in ReplicaManager module.
+- In the **projects** panel, right click and select **Build with Dependencies** on main module (**Homework-1**), on **DatabaseManager** module and in **ReplicaManager** module.
 
 
 #### 5 - Run the project
-In the Netbeand 'projects' panel, Right click and select "Run" on Homework1-ear, ReplicaManager, Database Manager (Follow this order to avoid runtime errors!)
+In the Netbeans **projects** panel, Right click and select **Run** on **Homework1-ear**, **ReplicaManager**, **Database Manager** (Follow this order to avoid runtime errors!)
 >NB: When you run the project for the first time you will need to select a web server. 
-The project works on Glassfish Server 4.1.1 and has been tested on 'ArchLinux' and 'Windows 10 Home', it may not work properly on some other platform.
+The project works on **Glassfish Server 4.1.1** and has been tested on **ArchLinux** and **Windows 10 Home**, it may not work properly on some other platform.
 
 #### 6 - Configure the environment
 Depending on the environment you may need to change the port to the REST services in some points of the project (project default is 43636, but often 8080 is the correct port):
@@ -100,22 +101,22 @@ Depending on the environment you may need to change the port to the REST service
 
 #### 7 - Open the web pages
 Now you can navigate to:
-- http://localhost:43636/Homework1-web/ (FileSystemService frontend)
-- http://localhost:43636/DatabaseManager/ (DatabaseManager frontend)
-- http://localhost:43636/ReplicaManager/ (ReplicaManager frontend)
+- http://localhost:43636/Homework1-web/ (**FileSystemService** frontend)
+- http://localhost:43636/DatabaseManager/ (**DatabaseManager** frontend)
+- http://localhost:43636/ReplicaManager/ (**ReplicaManager** frontend)
 
 >NB: The port can be different, look at point 6
 
 
 ## Running for Production
 
-#### 1 - Download or clone the project from master branch
+#### 1 - Clone the project from master branch
 ```bash
 git clone https://github.com/orazioscavo13/FileSystemService.git
 ```
 #### 2 - Build the project
 - Open projects on Netbeans (Homework1, DatabaseManager, ReplicaManager)
-- In the 'projects' panel, right click and select "Build with Dependencies" on main module (Homework-1), on DatabaseManager module and in ReplicaManager module.
+- In the **projects** panel, right click and select **Build with Dependencies** on main module (**Homework-1**), on **DatabaseManager** module and in **ReplicaManager** module.
 
 #### 3 - Run the project
 ```bash
@@ -126,6 +127,6 @@ sudo docker-compose up
 
 #### 4 - Open the web pages
 Now you can navigate to:
-- http://localhost:8080/Homework1-web/ (FileSystemService frontend)
-- http://localhost:43637/DatabaseManager-1.0-SNAPSHOT/ (DatabaseManager frontend)
-- http://localhost:43638/ReplicaManager-1.0-SNAPSHOT/ (ReplicaManager frontend)
+- http://localhost:8080/Homework1-web/ (**FileSystemService** frontend)
+- http://localhost:43637/DatabaseManager-1.0-SNAPSHOT/ (**DatabaseManager** frontend)
+- http://localhost:43638/ReplicaManager-1.0-SNAPSHOT/ (**ReplicaManager** frontend)
