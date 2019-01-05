@@ -8,7 +8,7 @@ package com.mycompany;
 import java.io.Serializable;
 
 /**
- *
+ * Log file Entry, used for the first phase of 2PC
  * @author Orazio
  * @author Alessandro
  */

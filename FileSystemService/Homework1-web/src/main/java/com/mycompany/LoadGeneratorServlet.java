@@ -36,7 +36,7 @@ import java.util.Date;
 import java.util.concurrent.TimeoutException;
 
 /**
- * 
+ * This class executes an automatic test, it launch a number of thread to execute the operation in a parallel way
  * @author Orazio
  * @author Alessandro
  */
@@ -46,7 +46,7 @@ public class LoadGeneratorServlet extends HttpServlet {
     
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
+     * methods, in this method automatic test is executed
      *
      * @param request servlet request
      * @param response servlet response

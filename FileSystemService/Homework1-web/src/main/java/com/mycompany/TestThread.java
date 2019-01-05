@@ -8,19 +8,28 @@ package com.mycompany;
 import java.util.concurrent.Callable;
 
 /**
- * 
+ * This thread can be used to upload or download a file from the filesystem, we use this thread during automatic tests
  * @author Orazio
  * @author Alessandro
  */
 public class TestThread implements Callable<Long> {
     private String path;
     private String destination;
-
+    
+    /**
+     * This constructor is used for upload
+     * @param path path for the test operation
+     * @param destination remote destination for the uploaded file
+     */
     public TestThread(String path, String destination) {
         this.path = path;
         this.destination = destination;
     }
 
+    /**
+     * This contructor is used for download
+     * @param path path of the file to download
+     */
     public TestThread(String path) {
         this.path = path;
         this.destination = null;

@@ -13,13 +13,16 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
  
 /**
- * 
+ * This class is created when service is ran, it creates an istance of ResultReceiver, that is a subscriber to results published in the RabbitMQ queue
  * @author Orazio
  * @author Alessandro
  */
 public class QueueListener implements ServletContextListener {
- 
     
+    /**
+     * This method is executed when the application is started
+     * @param event Servlet Context evetn
+     */
     @Override
     public void contextInitialized(ServletContextEvent event) {
         ResultReceiver receiver;
@@ -30,7 +33,7 @@ public class QueueListener implements ServletContextListener {
             Logger.getLogger(QueueListener.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
- 
+    
     @Override
     public void contextDestroyed(ServletContextEvent event) {
         

@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 
 
 /**
- * 
+ * This class is used to send http requests to the Filesystem REST service and evaluate the response time
  * @author Orazio
  * @author Alessandro
  */
@@ -33,7 +33,7 @@ public class RequestSenderService {
     
     
      /**
-      * 
+      * Send request for creating a new directory
       * @param path the path for the new directory
       * @return execution time (ms), -1 if the operation fails
       */
@@ -72,8 +72,8 @@ public class RequestSenderService {
     }
     
     /**
-     * 
-     * @param path local path of the file to be uploaded
+     * Send request for upload a new file
+     * @param path path of the file to be uploaded
      * @param destination destination for the file in the REST filesystem
      * @return execution time (ms), -1 if the operation fails
      */
@@ -139,7 +139,7 @@ public class RequestSenderService {
     }
     
     /**
-     * 
+     * Send request for download a file
      * @param path the path of the file to be downloaded
      * @return execution time (ms), -1 if the operation fails
      */
