@@ -24,72 +24,8 @@ import java.util.logging.Logger;
  * @author Alessandro
  */
 public class LogManager {
-    private static final String BASIC_LOG_PATH = "../../../../../../../dbLog";
+    private static final String BASIC_LOG_PATH = "../dbLog";
     private static final String LOG_PATH = BASIC_LOG_PATH + "/replicaLog.log";
-    
-    /**
-     * Reads all entries from log file
-     * @return ArrayList of LogEntry containing the entries of the log file
-     */
-    public static ArrayList<LogEntry> readEntries() {
-        
-        FileInputStream fis = null;
-        ObjectInputStream ois = null;
-        ArrayList<LogEntry> entries = null;
-        
-        try {
-            fis = new FileInputStream(LOG_PATH);
-            ois = new ObjectInputStream(fis);
-            entries = (ArrayList<LogEntry>) ois.readObject();
-            
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(ReplicaResource.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(ReplicaResource.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                ois.close();
-                fis.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ReplicaResource.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
-        return entries;
-    }
-    
-    /**
-     * Writes an ArrayList of LogEntry in the log file
-     * @param entries the Arraylist of LogEntry
-     * @return boolean, true if write succeed
-     */
-    public static boolean writeEntries (ArrayList<LogEntry> entries) {
-        boolean ret = true;
-        FileOutputStream fout = null;
-        ObjectOutputStream oos = null;
-        
-        try {
-            fout = new FileOutputStream(LOG_PATH);
-            oos = new ObjectOutputStream(fout);
-            oos.writeObject(entries);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(ReplicaResource.class.getName()).log(Level.SEVERE, null, ex);
-            ret = false;
-        } catch (IOException ex) {
-            Logger.getLogger(ReplicaResource.class.getName()).log(Level.SEVERE, null, ex);
-            ret = false;
-        } finally {
-            try {
-                oos.close();
-                fout.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ReplicaResource.class.getName()).log(Level.SEVERE, null, ex);
-                ret = false;
-            }
-        }
-        
-        return ret;
-    }
     
     /**
      * Writes a LogEntry in the log file
@@ -135,6 +71,90 @@ public class LogManager {
             }catch(IOException ioe){
               System.out.println("Error while creating a new log file :" + ioe);
               ret = false;
+            }
+        }
+        
+        return ret;
+    }
+    
+    /**
+     * get the max sequence number in use in the log file, -1 if none
+     * @return 
+     */
+    public static int getMaxSequenceNumber() {
+        ArrayList<LogEntry> entries = readEntries();
+        if(entries != null) {
+            int maxSeqNum = 0;
+            int auxSeqNum = 0;
+
+            for (LogEntry entry : entries) { 
+                auxSeqNum = entry.getSequenceNumber();
+                if(auxSeqNum > maxSeqNum)
+                    maxSeqNum = auxSeqNum; 
+            }
+            return maxSeqNum;
+        } 
+        
+        return -1;
+    }
+    
+    /**
+     * Reads all entries from log file
+     * @return ArrayList of LogEntry containing the entries of the log file
+     */
+    public static ArrayList<LogEntry> readEntries() {
+        
+        FileInputStream fis = null;
+        ObjectInputStream ois = null;
+        ArrayList<LogEntry> entries = null;
+        
+        try {
+            fis = new FileInputStream(LOG_PATH);
+            ois = new ObjectInputStream(fis);
+            entries = (ArrayList<LogEntry>) ois.readObject();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ReplicaResource.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(ReplicaResource.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                ois.close();
+                fis.close();
+            } catch (IOException ex) {
+                Logger.getLogger(ReplicaResource.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return entries;
+    }
+    
+    /**
+     * Writes an ArrayList of LogEntry in the log file
+     * @param entries the Arraylist of LogEntry
+     * @return boolean, true if write succeed
+     */
+    public static boolean writeEntries (ArrayList<LogEntry> entries) {
+        boolean ret = true;
+        FileOutputStream fout = null;
+        ObjectOutputStream oos = null;
+        
+        try {
+            fout = new FileOutputStream(LOG_PATH);
+            oos = new ObjectOutputStream(fout);
+            oos.writeObject(entries);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ReplicaResource.class.getName()).log(Level.SEVERE, null, ex);
+            ret = false;
+        } catch (IOException ex) {
+            Logger.getLogger(ReplicaResource.class.getName()).log(Level.SEVERE, null, ex);
+            ret = false;
+        } finally {
+            try {
+                oos.close();
+                fout.close();
+            } catch (IOException ex) {
+                Logger.getLogger(ReplicaResource.class.getName()).log(Level.SEVERE, null, ex);
+                ret = false;
             }
         }
         

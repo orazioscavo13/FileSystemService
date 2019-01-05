@@ -84,6 +84,28 @@ public class ReplicaResource {
     }
       
     /**
+     * DELETE method for deleting all collection from the database
+     * @return string containing the outcome of the operation
+     */
+    @DELETE
+    @Path("collections/drop")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String dropCollections() {
+        String ret;
+        if(connect()) {
+            MongoCollection<Document> collection;
+            for (String name : database.listCollectionNames()) { 
+                collection = database.getCollection(name);
+                collection.drop();
+            }
+            ret = SUCCESS_TRUE;
+        } else 
+            ret = SUCCESS_FALSE;
+        
+        return ret;
+    }
+    
+    /**
      * DELETE method for deleting a collection from the database
      * @param collectionName name of the db collection
      * @return string containing the outcome of the operation
@@ -127,6 +149,18 @@ public class ReplicaResource {
             ret = SUCCESS_FALSE;
         
         return ret;
+    }
+    
+    /**
+     * Return the max sequence number in use in the log file
+     * @return string containing the outcome of the operation and the collection's documents
+     */
+    @GET
+    @Path("collections/logfile/maxSequenceNumber")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getMaxSequenceNumber() {
+        int maxSeqNum = LogManager.getMaxSequenceNumber();
+        return "{\"success\": true, \"sequence_number\":" + ((maxSeqNum == -1) ? "0" : maxSeqNum) + "}";
     }
     
     /**

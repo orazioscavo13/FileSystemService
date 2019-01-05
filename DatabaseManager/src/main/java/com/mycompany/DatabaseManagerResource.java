@@ -8,6 +8,7 @@ package com.mycompany;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
@@ -36,6 +37,20 @@ public class DatabaseManagerResource {
         transactionManager = TransactionManager.getInstance();
     }
 
+
+    /* REST METHODS */    
+    
+    /**
+     * Drops replicas' databases collections. NB: for develop use only.
+     * @return string containing the outcome of the operation 
+     */
+    @DELETE
+    @Path("collections/drop")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String dropCollections() {
+        return transactionManager.dropCollections("drop");
+    }
+    
     /**
      * Retrieves all documents in the specified collection
      * @param collectionName the name of the db collection
