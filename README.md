@@ -7,19 +7,19 @@ A web service for remote filesystem management.
 - [Screenshots](#screenshots)
 - [Requirements](#requirements)
 - [Dependencies](#dependencies)
-- [Running](#running-for-test)
-
+- [Testing](#running-for-test)
+- [Running](#running-for-production)
 
 
 ## References
 
 Javadoc is available at:
 
-Docs/apidoc-ejb (EJB documentation)
+Docs/apidoc-EJB (EJB documentation)
 
-Docs/apidoc-web  (REST service and web application documentation)
+Docs/apidoc-WEB  (REST service and web application documentation)
 
-Docs/apidoc-DBManager  (DB Writer/Reader documentation)
+Docs/apidoc-DBanager  (DB Writer/Reader documentation)
 
 Docs/apidoc-ReplicaManager  (Replica Manager documentation)
 
@@ -27,9 +27,9 @@ Docs/apidoc-ReplicaManager  (Replica Manager documentation)
 
 ## Screenshots
 
-
+![screenshot](screenshots/1.png)
 ![screenshot](screenshots/2.png)
-
+![screenshot](screenshots/3.png)
 
 
 ## Requirements
@@ -54,15 +54,16 @@ Docs/apidoc-ReplicaManager  (Replica Manager documentation)
 
 
 ## Running for Test
-
-#### 1 - Download or clone the project
+You can clone this project and simply run it without starting any docker container, so you can work on it and test it easily and quickly.
+#### 1 - Download or clone the project from develop branch
 ```bash
-git clone https://github.com/orazioscavo13/FileSystemService.git
+git clone --branch develop https://github.com/orazioscavo13/FileSystemService.git
 ```
 
 #### 2 - Run the RabbitMQ Server
 on windows:
 Run "RabbitMQ Service - start" from start menu
+
 on Linux:
 ```bash
 sudo rabbitmq-server start
@@ -70,19 +71,50 @@ sudo rabbitmq-server start
 NB: you will need to enter your password to run the server
 
 
+#### 3 - Run the Database
+on windows:
+Go to installation folder and run 'mongo.exe'
 
-#### 3 - Open the project on Netbeans
-#### 4 - Select "Build with Dependencies" on main module (Homework-1), on DatabaseManager module and in ReplicaManager module.
-#### 5 - Run Homework1-ear, ReplicaManager, Database Manager (Follow this order to avoid runtime errors!)
+on Linux:
+```bash
+sudo systemctl start mongodb.service
+```
+NB: The command can change depending on the distribution
+
+#### 4 - Build the project
+- Open projects on Netbeans (Homework1, DatabaseManager, ReplicaManager)
+- In the 'projects' panel, right click and select "Build with Dependencies" on main module (Homework-1), on DatabaseManager module and in ReplicaManager module.
 
 
-#### 6 - Select and configure Web Server and environment
-When you run the project for the first time you will need to select a web server. 
+#### 5 - Run the project
+In the Netbeand 'projects' panel, Right click and select "Run" on Homework1-ear, ReplicaManager, Database Manager (Follow this order to avoid runtime errors!)
+>NB: When you run the project for the first time you will need to select a web server. 
+The project works on Glassfish Server 4.1.1 and has been tested on 'ArchLinux' and 'Windows 10 Home', it may not work properly on some other platform.
 
-The project has been successfully tested on Glassfish Server 4.1 on ArchLinux, it may not work properly on some other platform.
+#### 6 - Configure the environment
+Depending on the environment you may need to change the port to the REST services in some points of the project (project default is 43636, but often 8080 is the correct port):
+- change the value of the attribute 'port' at Homework1-web/RequestSenderService.java (line 28)
+- change the value of the port in the 'baseUrl' string at Homework1-web/web-pages/mainController.js (line 10)
+- change the value of the port in the 'baseUrl' string at DatabaseManager/web-pages/mainController.js (line 14)
+- change the value of the url to the unique replica managed in DatabaseManager/TransactionManager (line 38)
+
+#### 8 - Open the web pages
+Now you can navigate to:
+- http://localhost:43636/Homework1-web/ (FileSystemService frontend)
+- http://localhost:43636/DatabaseManager/ (DatabaseManager frontend)
+- http://localhost:43636/Homework1-web/ (ReplicaManager frontend)
+
+>NB: The port can be different, look at point 7
 
 
-NB: Depending on the web server you may need to change the port to the REST service in the frontend and in the RequestSender used by LoadGeneratorServlet (default is 43636):
+## Running for Production
 
-- change the value of the attribute 'port' at RequestSenderService.java (line 28)
-- change the value of the port in the baseUrl string in the js controller for the frontend page, mainController.js (line 10)
+#### 1 - Download or clone the project from master branch
+```bash
+git clone https://github.com/orazioscavo13/FileSystemService.git
+```
+#### 4 - Build the project
+- Open projects on Netbeans (Homework1, DatabaseManager, ReplicaManager)
+- In the 'projects' panel, right click and select "Build with Dependencies" on main module (Homework-1), on DatabaseManager module and in ReplicaManager module.
+
+#### 3 - Run the project
