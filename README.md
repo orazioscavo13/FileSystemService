@@ -96,7 +96,7 @@ Depending on the environment you may need to change the port to the REST service
 - change the value of the attribute 'port' at Homework1-web/RequestSenderService.java (line 28)
 - change the value of the port in the 'baseUrl' string at Homework1-web/web-pages/mainController.js (line 10)
 - change the value of the port in the 'baseUrl' string at DatabaseManager/web-pages/mainController.js (line 14)
-- change the value of the url to the unique replica managed in DatabaseManager/TransactionManager (line 38)
+- change the value of the port in the url to the unique replica managed in DatabaseManager/TransactionManager (line 38)
 
 #### 8 - Open the web pages
 Now you can navigate to:
@@ -113,7 +113,7 @@ Now you can navigate to:
 ```bash
 git clone https://github.com/orazioscavo13/FileSystemService.git
 ```
-#### 4 - Build the project
+#### 2 - Build the project
 - Open projects on Netbeans (Homework1, DatabaseManager, ReplicaManager)
 - In the 'projects' panel, right click and select "Build with Dependencies" on main module (Homework-1), on DatabaseManager module and in ReplicaManager module.
 
