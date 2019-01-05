@@ -84,6 +84,28 @@ public class ReplicaResource {
     }
       
     /**
+     * DELETE method for deleting all collection from the database
+     * @return string containing the outcome of the operation
+     */
+    @DELETE
+    @Path("collections/drop")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String dropCollections() {
+        String ret;
+        if(connect()) {
+            MongoCollection<Document> collection;
+            for (String name : database.listCollectionNames()) { 
+                collection = database.getCollection(name);
+                collection.drop();
+            }
+            ret = SUCCESS_TRUE;
+        } else 
+            ret = SUCCESS_FALSE;
+        
+        return ret;
+    }
+    
+    /**
      * DELETE method for deleting a collection from the database
      * @param collectionName name of the db collection
      * @return string containing the outcome of the operation

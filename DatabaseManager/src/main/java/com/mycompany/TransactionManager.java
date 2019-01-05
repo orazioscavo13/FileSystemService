@@ -27,7 +27,11 @@ public class TransactionManager {
     private static final String BASIC_RESOURCE_IDENTIFIER = "ReplicaManager/webresources/mongodb/"; 
     private static final String SUCCESS_FALSE = "{\"success\": false}";
     private static final String SUCCESS_TRUE = "{\"success\": true}";
+    private static final String REQUEST_DELETE = "delete"; 
+    private static final String REQUEST_GET = "get"; 
+    private static final String REQUEST_POST = "post"; 
     private static final int TIMEOUT = 3000; 
+    private static final int DROP_TIMEOUT = 10000; 
     private ArrayList<String> replicaList;
     private static TransactionManager instance;
     private int sequenceNumber;
@@ -46,6 +50,19 @@ public class TransactionManager {
     }
     
     /**
+     * Drops replicas' databases collections. NB: for develop use only.
+     * @param path the path of the drop replica manager REST
+     * @return string containing the outcome of the operation
+     */
+    public String dropCollections(String path) {
+        // Prima fase
+        ArrayList<String> resultList = first2PCphase(null, path, REQUEST_DELETE);
+        
+        // Seconda fase
+        return readQuorumDecision(resultList);
+    }
+    
+    /**
      * Strart a 2PC based write operation in the db
      * @param result the result data to be inserted in the new db entry
      * @param writePath the URI for the request to the db
@@ -54,7 +71,7 @@ public class TransactionManager {
     public String twoPhaseCommitWrite(TestResult result, String writePath) {
         sequenceNumber++;
         // Prima fase
-        ArrayList<String> resultList = first2PCphase(result, writePath);
+        ArrayList<String> resultList = first2PCphase(result, writePath, REQUEST_POST);
         
         // Seconda fase
         return writeQuorumDecision(resultList);
@@ -67,7 +84,7 @@ public class TransactionManager {
      */
     public String quorumRead(String readPath) {
         // Prima fase
-        ArrayList<String> resultList = first2PCphase(null, readPath);
+        ArrayList<String> resultList = first2PCphase(null, readPath, REQUEST_GET);
         
         // Seconda fase
         return readQuorumDecision(resultList);
@@ -79,19 +96,26 @@ public class TransactionManager {
      * @param path the URI for the request to the db
      * @return List containing the results collected from all replicas
      */
-    public ArrayList<String> first2PCphase (TestResult result, String path){
+    public ArrayList<String> first2PCphase (TestResult result, String path, String requestType){
         String url = BASIC_RESOURCE_IDENTIFIER + "collections" + (result == null ? ("/" + path) : "");
         ArrayList<Callable<String>> threadList = new ArrayList<Callable<String>>();
-        ExecutorService threadPoolService = Executors.newFixedThreadPool(5);
+        ExecutorService threadPoolService = Executors.newFixedThreadPool(replicaList.size());
         ArrayList<String> resultList = new ArrayList<String>();
         
-        // Esegue 5 thread in parallelo, ognuno dei quali invia una richiesta GET o POST ad un replica manager diverso
+        // Esegue replicaList.size() thread in parallelo, ognuno dei quali invia una richiesta GET/POST/DELETE ad un replica manager diverso
         for(int i=0; i<replicaList.size(); i++) {
             try {
-                if(result == null) 
-                    threadList.add(new GetThread(replicaList.get(i) + url, TIMEOUT));
-                else
-                    threadList.add(new PostThread(replicaList.get(i) + url, TIMEOUT, result, sequenceNumber, path));
+                switch(requestType){
+                    case REQUEST_GET:
+                        threadList.add(new GetThread(replicaList.get(i) + url, TIMEOUT));
+                        break;
+                    case REQUEST_POST:
+                        threadList.add(new PostThread(replicaList.get(i) + url, TIMEOUT, result, sequenceNumber, path));
+                        break;
+                    case REQUEST_DELETE:
+                        threadList.add(new DeleteThread(replicaList.get(i) + url, DROP_TIMEOUT));
+                        break;
+                }
             } catch (Exception ex) {
                 Logger.getLogger(TransactionManager.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -120,9 +144,9 @@ public class TransactionManager {
         String ret = SUCCESS_TRUE;
         String url = BASIC_RESOURCE_IDENTIFIER + "collections/" + (commit ? "commit" : "abort");
         ArrayList<Callable<String>> threadList = new ArrayList<Callable<String>>();
-        ExecutorService threadPoolService = Executors.newFixedThreadPool(5);
+        ExecutorService threadPoolService = Executors.newFixedThreadPool(replicaList.size());
         
-        // Esegue 5 thread in parallelo, ognuno dei quali invia una richiesta POST (Abort o Commit) ad un replica manager diverso
+        // Esegue replicaList.size() thread in parallelo, ognuno dei quali invia una richiesta POST (Abort o Commit) ad un replica manager diverso
         for(int i=0; i<replicaList.size(); i++) {
             try {
                 threadList.add(new PostThread(replicaList.get(i) + url, TIMEOUT, null , sequenceNumber, null));

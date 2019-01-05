@@ -15,6 +15,31 @@ app.controller('mainCtrl', function($scope, $http, $httpParamSerializerJQLike) {
 
 
     /* === COLLECTION REST === */
+
+    $scope.dropCollections = function() {
+        $scope.bLoading = true;
+        $http.delete($scope.baseUrl + "collections/drop").then(function(resp) {
+            document.getElementById("output").innerHTML = syntaxHighlight(JSON.stringify(resp.data, undefined, 4));
+            $scope.queryOutput = resp.data;
+            console.log(resp);
+        }).finally (function(){
+            $scope.bLoading = false;
+        });            
+    };
+    
+    $scope.insertDocument = function(collectionName, directory, cycle, meanAdd, meanDownload, stdDevAdd, stdDevDownload, state) {
+        if(collectionName != null) {
+            $scope.bLoading = true;
+            $http.post($scope.baseUrl + "collections/write", $httpParamSerializerJQLike({collection_name: collectionName, directory: directory, cycle: cycle, mean_add: meanAdd, mean_download: meanDownload, stddev_add: stdDevAdd, stddev_download: stdDevDownload, state: state, timestamp: moment().format("YYYY/MM/DD - HH:mm:ss")}), {headers:{'Content-Type': 'application/x-www-form-urlencoded'}}).then(function(resp) {
+                document.getElementById("output").innerHTML = syntaxHighlight(JSON.stringify(resp.data, undefined, 4));
+                $scope.queryOutput = resp.data;
+                console.log(resp);
+            }).finally (function(){
+                $scope.bLoading = false;
+            }); 
+        }
+    };
+    
     $scope.readCollection = function(collectionName) {
         if(collectionName != null) {
             $scope.bLoading = true;
@@ -41,19 +66,6 @@ app.controller('mainCtrl', function($scope, $http, $httpParamSerializerJQLike) {
         }
     };
 
-    $scope.insertDocument = function(collectionName, directory, cycle, meanAdd, meanDownload, stdDevAdd, stdDevDownload, state) {
-        if(collectionName != null) {
-            $scope.bLoading = true;
-            $http.post($scope.baseUrl + "collections/write", $httpParamSerializerJQLike({collection_name: collectionName, directory: directory, cycle: cycle, mean_add: meanAdd, mean_download: meanDownload, stddev_add: stdDevAdd, stddev_download: stdDevDownload, state: state, timestamp: moment().format("YYYY/MM/DD - HH:mm:ss")}), {headers:{'Content-Type': 'application/x-www-form-urlencoded'}}).then(function(resp) {
-                document.getElementById("output").innerHTML = syntaxHighlight(JSON.stringify(resp.data, undefined, 4));
-                $scope.queryOutput = resp.data;
-                console.log(resp);
-            }).finally (function(){
-                $scope.bLoading = false;
-            }); 
-        }
-    };
-    
     /* Others */
     function syntaxHighlight(json) {
         json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

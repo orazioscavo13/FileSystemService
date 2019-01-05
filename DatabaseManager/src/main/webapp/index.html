@@ -25,7 +25,9 @@
         
         <!-- main controller import -->
         <script src="mainController.js"></script>
-
+        
+        <!-- Favicon -->
+        <link rel="shortcut icon" href="res/favicon.ico">
     </head>
     <body>
         <div ng-app="myApp" ng-controller="mainCtrl"> 
@@ -45,10 +47,10 @@
                         <h3 class="m-0">Replicas managed: <span class="text-primary">{{replicaNumber}}</span></h3>
                     </div>
                     
-                    <!-- DATABASE QUERY -->
+                    <!-- DATABASE QUERIES -->
                     <div class="col-md-6 card p-0 border-radius-0 h-100">
                         <div class="card-header d-flex align-items-center justify-content-between py-2">
-                            <h4 class="m-0">Database Query</h4>
+                            <h4 class="m-0">Database Queries</h4>
                         </div>
                         <div class="card-body" style="overflow:auto; height: calc(100vh - 300px);">
                             <div class="h-100">
@@ -75,9 +77,13 @@
                                                 <button type="button" class="btn btn-secondary btn-sm ml-2" ng-click="insertDocument(inputs.writeCollectionName, inputs.doc.directoryName, inputs.doc.cycle, inputs.doc.meanAdd, inputs.doc.meanDownload, inputs.doc.stddevAdd, inputs.doc.stddevDownload, inputs.doc.state)" ng-class="{'disabled cursor-not-allowed': (inputs.writeCollectionName==null || inputs.writeCollectionName=='')}"><span class="fa fa-right-arrow"></span>Invia <span class="ml-1 fa fa-arrow-circle-right"></span></button>
                                             </div>
                                         </div>
-                                        <div class="row mx-0 my-2 card">
-                                            <div class="card-header text-left px-2 py-1"><span>Documento</span></div>
-                                            <div class="card-body row m-0 px-2 py-1">
+                                        <div class="row mx-0 my-2 card" ng-init="bShowDoc=false">
+                                            <div class="card-header text-left px-2 py-1 cursor-pointer" ng-click="bShowDoc = !bShowDoc">
+                                                <span ng-show="!bShowDoc" class="fa fa-plus-circle mr-2" style="font-size: 14px;"></span>
+                                                <span ng-show="bShowDoc" class="fa fa-minus-circle mr-2" style="font-size: 14px;"></span>
+                                                <span>Documento</span>
+                                            </div>
+                                            <div class="card-body row m-0 px-2 py-1" ng-show="bShowDoc">
                                                 <div class="form-group m-0 col-3 text-left pl-0">
                                                     <label class="text-muted col-form-label-sm p-0 m-0">Nome directory</label>
                                                     <input type="text" class="form-control form-control-sm" placeholder="Directory" name="directoryName" ng-model="inputs.doc.directoryName">
@@ -107,6 +113,14 @@
                                                     <input type="number" min='0' max='1' class="form-control form-control-sm" placeholder="Stato" name="state" ng-model="inputs.doc.state">
                                                 </div>
                                             </div>
+                                        </div>
+                                    </li>
+                                    <li class="d-flex align-items-center justify-content-between list-group-item py-2 mb-2">
+                                        <div><span>Cancella i contenuti dei database</span></div>
+                                        <div class="form-group m-0 d-flex ml-auto">
+                                            <button type="button" class="btn btn-secondary btn-sm ml-2" ng-show="!bShowConfirm" ng-click="bShowConfirm = !bShowConfirm">Invia <span class="ml-1 fa fa-arrow-circle-right"></span></button>
+                                            <button type="button" class="btn btn-danger btn-sm ml-2" ng-show="bShowConfirm" ng-click="bShowConfirm = !bShowConfirm">Annulla <span class="ml-1 fa fa-times"></span></button>
+                                            <button type="button" class="btn btn-success btn-sm ml-2" ng-show="bShowConfirm" ng-click="bShowConfirm = !bShowConfirm; dropCollections()">Conferma <span class="ml-1 fa fa-arrow-circle-right"></span></button>
                                         </div>
                                     </li>
                                 </ul>

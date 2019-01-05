@@ -17,23 +17,23 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * This thread (used for quorum read) sends a GET request to a single replica of the db, setting a timeout for the response
+ * This thread (used for drop all databases) sends a DELETE request to a single replica of the db, setting a timeout for the response
  * @author Orazio
  * @author Alessandro
  */
-public class GetThread implements Callable<String> {
+public class DeleteThread implements Callable<String> {
     private String url;
     private int timeout;
     private static final String SUCCESS_FALSE = "{\"success\": false}";
 
     
-    public GetThread(String url, int timeout) {
+    public DeleteThread(String url, int timeout) {
         this.url = url;
         this.timeout = timeout;
     }
 
     /**
-     * Sends a GET request to a single replica manager and waits for response within a specified timeout
+     * Sends a DELETE request to a single replica manager and waits for response within a specified timeout
      * @return String contining the outcome of the operations
      * @throws java.lang.Exception
      */
@@ -45,7 +45,7 @@ public class GetThread implements Callable<String> {
         URL myurl = new URL(url);
         
         con = (HttpURLConnection) myurl.openConnection();
-        con.setRequestMethod("GET");
+        con.setRequestMethod("DELETE");
         con.setConnectTimeout(timeout); 
         
         try {
