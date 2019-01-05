@@ -24,7 +24,7 @@ import java.util.logging.Logger;
  * @author Alessandro
  */
 public class TransactionManager {
-    private static final String BASIC_RESOURCE_IDENTIFIER = "ReplicaManager/webresources/mongodb/"; 
+    private static final String BASIC_RESOURCE_IDENTIFIER = "ReplicaManager-1.0-SNAPSHOT/webresources/mongodb/"; 
     private static final String SUCCESS_FALSE = "{\"success\": false}";
     private static final String SUCCESS_TRUE = "{\"success\": true}";
     private static final String REQUEST_DELETE = "delete"; 
@@ -38,7 +38,11 @@ public class TransactionManager {
     
     private TransactionManager() {
         replicaList = new ArrayList<String>();
-        replicaList.add("http://localhost:43636/");
+        replicaList.add("http://replicamanager_1:8080/");
+        replicaList.add("http://replicamanager_2:8080/");
+        replicaList.add("http://replicamanager_3:8080/");
+        replicaList.add("http://replicamanager_4:8080/");
+        replicaList.add("http://replicamanager_5:8080/");
     }
     
     public static TransactionManager getInstance() {
