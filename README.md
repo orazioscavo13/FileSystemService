@@ -110,6 +110,8 @@ Now you can navigate to:
 
 ## Running for Production (with **docker**)
 
+>NB: Before you follow this guide you need to have a working installation of docker on your host!
+
 #### 1 - Clone the project from master branch
 ```bash
 git clone https://github.com/orazioscavo13/FileSystemService.git
