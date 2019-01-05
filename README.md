@@ -98,13 +98,13 @@ Depending on the environment you may need to change the port to the REST service
 - change the value of the port in the 'baseUrl' string at DatabaseManager/web-pages/mainController.js (line 14)
 - change the value of the port in the url to the unique replica managed in DatabaseManager/TransactionManager (line 38)
 
-#### 8 - Open the web pages
+#### 7 - Open the web pages
 Now you can navigate to:
 - http://localhost:43636/Homework1-web/ (FileSystemService frontend)
 - http://localhost:43636/DatabaseManager/ (DatabaseManager frontend)
 - http://localhost:43636/ReplicaManager/ (ReplicaManager frontend)
 
->NB: The port can be different, look at point 7
+>NB: The port can be different, look at point 6
 
 
 ## Running for Production
