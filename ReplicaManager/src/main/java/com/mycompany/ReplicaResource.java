@@ -152,6 +152,18 @@ public class ReplicaResource {
     }
     
     /**
+     * Return the max sequence number in use in the log file
+     * @return string containing the outcome of the operation and the collection's documents
+     */
+    @GET
+    @Path("collections/logfile/maxSequenceNumber")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getMaxSequenceNumber() {
+        int maxSeqNum = LogManager.getMaxSequenceNumber();
+        return "{\"success\": true, \"sequence_number\":" + ((maxSeqNum == -1) ? "0" : maxSeqNum) + "}";
+    }
+    
+    /**
      * Retrieves the last document committed in the specified collection
      * @param collectionName name of the db collection
      * @return string containing the outcome of the operation and the last committed document

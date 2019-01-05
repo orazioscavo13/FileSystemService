@@ -37,7 +37,6 @@ public class TransactionManager {
     private int sequenceNumber;
     
     private TransactionManager() {
-        this.sequenceNumber = 0;
         replicaList = new ArrayList<String>();
         replicaList.add("http://localhost:43636/");
     }
@@ -50,13 +49,29 @@ public class TransactionManager {
     }
     
     /**
+     * sends a GET request to all replicas to get the max sequence number in use in their log files and sets the sequence number property according to it
+     */
+    public void setSequenceNumber() {
+        ArrayList<String> resultList = sendThreads(null, "logfile/maxSequenceNumber", REQUEST_GET);
+        int maxSeqNum = 0;
+        int seqNum = 0;
+        for(int i=0; i<resultList.size(); i++) {
+            seqNum = (int)(parseJSON(resultList.get(i))).get("sequence_number");
+            if(seqNum > maxSeqNum)
+                maxSeqNum = seqNum;
+        }
+        this.sequenceNumber = maxSeqNum;        
+        return;
+    }
+    
+    /**
      * Drops replicas' databases collections. NB: for develop use only.
      * @param path the path of the drop replica manager REST
      * @return string containing the outcome of the operation
      */
     public String dropCollections(String path) {
         // Prima fase
-        ArrayList<String> resultList = first2PCphase(null, path, REQUEST_DELETE);
+        ArrayList<String> resultList = sendThreads(null, path, REQUEST_DELETE);
         
         // Seconda fase
         return readQuorumDecision(resultList);
@@ -71,7 +86,7 @@ public class TransactionManager {
     public String twoPhaseCommitWrite(TestResult result, String writePath) {
         sequenceNumber++;
         // Prima fase
-        ArrayList<String> resultList = first2PCphase(result, writePath, REQUEST_POST);
+        ArrayList<String> resultList = sendThreads(result, writePath, REQUEST_POST);
         
         // Seconda fase
         return writeQuorumDecision(resultList);
@@ -84,19 +99,19 @@ public class TransactionManager {
      */
     public String quorumRead(String readPath) {
         // Prima fase
-        ArrayList<String> resultList = first2PCphase(null, readPath, REQUEST_GET);
+        ArrayList<String> resultList = sendThreads(null, readPath, REQUEST_GET);
         
         // Seconda fase
         return readQuorumDecision(resultList);
     }
     
     /**
-     * Start the first phase of the 2PC, one thread is created for each db replica to send a request
+     * Creates one thread for each db replica to send a request
      * @param result the result data to be inserted in the db
      * @param path the URI for the request to the db
      * @return List containing the results collected from all replicas
      */
-    public ArrayList<String> first2PCphase (TestResult result, String path, String requestType){
+    public ArrayList<String> sendThreads (TestResult result, String path, String requestType){
         String url = BASIC_RESOURCE_IDENTIFIER + "collections" + (result == null ? ("/" + path) : "");
         ArrayList<Callable<String>> threadList = new ArrayList<Callable<String>>();
         ExecutorService threadPoolService = Executors.newFixedThreadPool(replicaList.size());
