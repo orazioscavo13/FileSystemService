@@ -19,7 +19,7 @@ Docs/apidoc-EJB (EJB documentation)
 
 Docs/apidoc-WEB  (REST service and web application documentation)
 
-Docs/apidoc-DBanager  (DB Writer/Reader documentation)
+Docs/apidoc-DBmanager  (DB Writer/Reader documentation)
 
 Docs/apidoc-ReplicaManager  (Replica Manager documentation)
 
