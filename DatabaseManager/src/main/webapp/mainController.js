@@ -7,7 +7,7 @@
 var app = angular.module('myApp', []);
 app.controller('mainCtrl', function($scope, $http, $httpParamSerializerJQLike) {
 
-    $scope.replicaNumber = 1;
+    $scope.replicaNumber = 5;
     $scope.queryOutput = null;
     $scope.inputs = {doc: {}};
     $scope.bLoading = false;
