@@ -102,7 +102,7 @@ Depending on the environment you may need to change the port to the REST service
 Now you can navigate to:
 - http://localhost:43636/Homework1-web/ (FileSystemService frontend)
 - http://localhost:43636/DatabaseManager/ (DatabaseManager frontend)
-- http://localhost:43636/Homework1-web/ (ReplicaManager frontend)
+- http://localhost:43636/ReplicaManager/ (ReplicaManager frontend)
 
 >NB: The port can be different, look at point 7
 
@@ -118,3 +118,14 @@ git clone https://github.com/orazioscavo13/FileSystemService.git
 - In the 'projects' panel, right click and select "Build with Dependencies" on main module (Homework-1), on DatabaseManager module and in ReplicaManager module.
 
 #### 3 - Run the project
+```bash
+cd FileSystemService
+sudo docker-compose up
+```
+>NB: The image building process requires to download heavy docker images, and can take several minutes
+
+#### 4 - Open the web pages
+Now you can navigate to:
+- http://localhost:8080/Homework1-web/ (FileSystemService frontend)
+- http://localhost:43637/DatabaseManager-1.0-SNAPSHOT/ (DatabaseManager frontend)
+- http://localhost:43638/ReplicaManager-1.0-SNAPSHOT/ (ReplicaManager frontend)
