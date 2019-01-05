@@ -8,8 +8,9 @@ A web service for remote filesystem management.
 - [Screenshots](#screenshots)
 - [Requirements](#requirements)
 - [Dependencies](#dependencies)
+- [Running with Docker](#running-for-production)
 - [Testing](#running-for-test)
-- [Running](#running-for-production)
+
 
 
 ## References
@@ -52,9 +53,32 @@ Javadoc is available at:
 - `rabbitMQ amqp-client 5.5.1`
 - `mongo-java-driver 3.4.1`
 
+## Running for Production
 
+>NB: Before you follow this guide you need to have a working installation of **Docker** on your host!
 
-## Running for Test (without **docker**)
+#### 1 - Clone the project from master branch
+```bash
+git clone https://github.com/orazioscavo13/FileSystemService.git
+```
+#### 2 - Build the project
+- Open projects on Netbeans (Homework1, DatabaseManager, ReplicaManager)
+- In the **projects** panel, right click and select **Build with Dependencies** on main module (**Homework-1**), on **DatabaseManager** module and in **ReplicaManager** module.
+
+#### 3 - Run the project
+```bash
+cd FileSystemService
+sudo docker-compose up
+```
+>NB: The image building process requires to download heavy docker images, and can take several minutes
+
+#### 4 - Open the web pages
+Now you can navigate to:
+- http://localhost:8080/Homework1-web/ (**FileSystemService** frontend)
+- http://localhost:43637/DatabaseManager-1.0-SNAPSHOT/ (**DatabaseManager** frontend)
+- http://localhost:43638/ReplicaManager-1.0-SNAPSHOT/ (**ReplicaManager** frontend)
+
+## Running for Test
 You can clone this project and simply run it without starting any docker container, so you can work on it and test it easily and quickly.
 #### 1 - Clone the project from develop branch
 ```bash
@@ -106,29 +130,3 @@ Now you can navigate to:
 - http://localhost:43636/ReplicaManager/ (**ReplicaManager** frontend)
 
 >NB: The port can be different, look at point 6
-
-
-## Running for Production (with **docker**)
-
->NB: Before you follow this guide you need to have a working installation of docker on your host!
-
-#### 1 - Clone the project from master branch
-```bash
-git clone https://github.com/orazioscavo13/FileSystemService.git
-```
-#### 2 - Build the project
-- Open projects on Netbeans (Homework1, DatabaseManager, ReplicaManager)
-- In the **projects** panel, right click and select **Build with Dependencies** on main module (**Homework-1**), on **DatabaseManager** module and in **ReplicaManager** module.
-
-#### 3 - Run the project
-```bash
-cd FileSystemService
-sudo docker-compose up
-```
->NB: The image building process requires to download heavy docker images, and can take several minutes
-
-#### 4 - Open the web pages
-Now you can navigate to:
-- http://localhost:8080/Homework1-web/ (**FileSystemService** frontend)
-- http://localhost:43637/DatabaseManager-1.0-SNAPSHOT/ (**DatabaseManager** frontend)
-- http://localhost:43638/ReplicaManager-1.0-SNAPSHOT/ (**ReplicaManager** frontend)
