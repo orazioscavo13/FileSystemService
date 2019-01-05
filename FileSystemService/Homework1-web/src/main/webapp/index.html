@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Start Page</title>
+        <title>FileSystemService</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         
         <!-- Font awesome import -->
@@ -53,7 +53,7 @@
                             <div class="h-100">
                                 <ul class="w-100 h-100 p-0 m-0">
                                     <li ng-show="directories.length == 0" class="list-group-item">Nessuna directory presente! Creane una tramite il pulsante in basso! <span class="fa fa-arrow-circle-down"></span></li>
-                                    <li class="d-flex align-items-center justify-content-between list-group-item py-2" ng-repeat="directory in directories track by $index">
+                                    <li class="d-flex align-items-center justify-content-between list-group-item py-2" ng-repeat="directory in directories | orderBy: directory.name track by $index">
                                         <div>
                                             <img class="list-image cursor-pointer" style="width: 32px; height:auto;" src="res/folder.png" ng-click="getDirectories(path + (path=='*' ? directory.name : ('*' + directory.name)))" data-toggle="tooltip" title="Apri directory">
                                             <span class="ml-2">{{directory.name}}</span>
@@ -82,7 +82,7 @@
                             <div class="h-100">
                                 <ul class="w-100 h-100 p-0 m-0">
                                     <li ng-show="files.length == 0" class="list-group-item">Nessun file presente! Creane uno tramite il pulsante in basso! <span class="fa fa-arrow-circle-down"></span></li>
-                                    <li class="d-flex align-items-center justify-content-between list-group-item py-2" ng-repeat="file in files track by $index">
+                                    <li class="d-flex align-items-center justify-content-between list-group-item py-2" ng-repeat="file in files | orderBy: file.name track by $index">
                                         <div>
                                             <img class="list-image" src="res/file.png" style="width: 32px; height:auto;" >
                                             <span class="ml-2">{{file.name}}</span>
