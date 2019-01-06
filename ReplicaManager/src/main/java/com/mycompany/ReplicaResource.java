@@ -74,7 +74,7 @@ public class ReplicaResource {
             System.out.println("Connected to the database successfully");  
 
             // Accessing the database 
-            database = mongo.getDatabase("FileSyistemDB");
+            database = mongo.getDatabase("FileSystemDB");
         } catch(MongoClientException e) {
             Logger.getLogger(ReplicaResource.class.getName()).log(Level.SEVERE, null, e);
             ret = false;
@@ -93,10 +93,12 @@ public class ReplicaResource {
     public String dropCollections() {
         String ret;
         if(connect()) {
-            MongoCollection<Document> collection;
-            for (String name : database.listCollectionNames()) { 
-                collection = database.getCollection(name);
-                collection.drop();
+            try{
+                mongo.dropDatabase("FileSystemDB");
+                ret = SUCCESS_TRUE;
+            }catch(MongoException e){
+                ret = SUCCESS_FALSE;
+                Logger.getLogger(ReplicaResource.class.getName()).log(Level.SEVERE, null, e);
             }
             ret = SUCCESS_TRUE;
         } else 
