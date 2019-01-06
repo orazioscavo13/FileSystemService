@@ -160,6 +160,7 @@ public class ReplicaResource {
     @Path("collections/logfile/maxSequenceNumber")
     @Produces(MediaType.TEXT_PLAIN)
     public String getMaxSequenceNumber() {
+        LogManager.checkLogFile();
         int maxSeqNum = LogManager.getMaxSequenceNumber();
         return "{\"success\": true, \"sequence_number\":" + ((maxSeqNum == -1) ? "0" : maxSeqNum) + "}";
     }

@@ -34,7 +34,7 @@ public class TransactionManager {
     private static final int DROP_TIMEOUT = 10000; 
     private ArrayList<String> replicaList;
     private static TransactionManager instance;
-    private int sequenceNumber;
+    private int sequenceNumber = -1;
     
     private TransactionManager() {
         replicaList = new ArrayList<String>();
@@ -64,7 +64,8 @@ public class TransactionManager {
             if(seqNum > maxSeqNum)
                 maxSeqNum = seqNum;
         }
-        this.sequenceNumber = maxSeqNum;        
+        this.sequenceNumber = maxSeqNum;    
+        System.out.println("Fixed new sequence number at DatabaseManager Startup: " + maxSeqNum);
         return;
     }
     
@@ -88,6 +89,9 @@ public class TransactionManager {
      * @return string containing the outcome of the operation
      */
     public String twoPhaseCommitWrite(TestResult result, String writePath) {
+        if(sequenceNumber == -1){
+            setSequenceNumber();
+        }
         sequenceNumber++;
         // Prima fase
         ArrayList<String> resultList = sendThreads(result, writePath, REQUEST_POST);
