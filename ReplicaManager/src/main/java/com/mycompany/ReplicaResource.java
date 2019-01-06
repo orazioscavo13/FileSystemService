@@ -93,7 +93,6 @@ public class ReplicaResource {
     public String dropCollections() {
         String ret;
         if(connect()) {
-            MongoCollection<Document> collection;
             try{
                 mongo.dropDatabase("FileSystemDB");
                 ret = SUCCESS_TRUE;
