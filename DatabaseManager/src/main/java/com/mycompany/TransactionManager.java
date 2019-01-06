@@ -60,7 +60,8 @@ public class TransactionManager {
             if(seqNum > maxSeqNum)
                 maxSeqNum = seqNum;
         }
-        this.sequenceNumber = maxSeqNum;        
+        this.sequenceNumber = maxSeqNum; 
+        System.out.println("Restored sequence number at dbmanager startup: " + maxSeqNum);
         return;
     }
     
