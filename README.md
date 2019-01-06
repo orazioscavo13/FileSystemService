@@ -80,6 +80,7 @@ Now you can navigate to:
 
 ## Running for Test
 You can clone this project and simply run it without starting any docker container, so you can work on it and test it easily and quickly.
+>NB: Before you follow this guide you need to have a working installation of **MongoDb** and **Rabbitmq-Server** on your host!
 #### 1 - Clone the project from develop branch
 ```bash
 git clone --branch develop https://github.com/orazioscavo13/FileSystemService.git
