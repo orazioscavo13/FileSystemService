@@ -38,7 +38,6 @@ public class ResultReceiver {
             connection = factory.newConnection();
             channel = connection.createChannel();
             transactionManager = TransactionManager.getInstance();
-            transactionManager.setSequenceNumber();
         }
         
         public void initializeReceiver() throws IOException {
