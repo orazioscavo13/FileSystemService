@@ -53,3 +53,9 @@ FileSystemService/Homework1-ejb/target/
 FileSystemService/Homework1-web/target/
 ReplicaManager/target/
 FileSystemService/target/
+
+FileSystemService/Homework1-ear/nb-configuration.xml
+FileSystemService/Homework1-ejb/nb-configuration.xml
+FileSystemService/Homework1-web/nb-configuration.xml
+ReplicaManager/nb-configuration.xml
+DatabaseManager/nb-configuration.xml
