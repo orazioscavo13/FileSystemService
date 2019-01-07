@@ -38,7 +38,7 @@ public class TransactionManager {
     
     private TransactionManager() {
         replicaList = new ArrayList<String>();
-        replicaList.add("http://localhost:43636/");
+        replicaList.add("http://localhost:8080/");
     }
     
     public static TransactionManager getInstance() {
