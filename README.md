@@ -118,7 +118,7 @@ In the Netbeans **projects** panel, Right click and select **Run** on **Homework
 The project works on **Glassfish Server 4.1.1** and has been tested on **ArchLinux** and **Windows 10 Home**, it may not work properly on some other platform.
 
 #### 6 - Configure the environment
-Depending on the environment you may need to change the port to the REST services in some points of the project (project default is 43636, but often 8080 is the correct port):
+Depending on the environment you may need to change the port to the REST services in some points of the project (project default is glassfish default port **8080**):
 - change the value of the attribute 'port' at Homework1-web/RequestSenderService.java (line 28)
 - change the value of the port in the 'baseUrl' string at Homework1-web/web-pages/mainController.js (line 10)
 - change the value of the port in the 'baseUrl' string at DatabaseManager/web-pages/mainController.js (line 14)
