@@ -1,0 +1,7 @@
+When merging to master branch to deploy with Docker, remember to change in those files Docker's overlay network references.
+
+- DatabaseManager/src/main/java/com/mycompany/ResultReceiver.java
+- DatabaseManager/src/main/java/com/mycompany/TransactionManager.java
+- DatabaseManager/src/main/webapp/mainController.js
+- FileSystemService/Homework1-web/src/main/java/com/mycompany/FileSystemResource.java
+- ReplicaManager/src/main/java/com/mycompany/LogManager.java
