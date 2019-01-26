@@ -7,7 +7,7 @@
 var app = angular.module('myApp', []);
 app.controller('mainCtrl', function($scope, $http, $httpParamSerializerJQLike) {
 
-    $scope.replicaNumber = 5;
+    $scope.replicasNumber = 0;
     $scope.queryOutput = null;
     $scope.inputs = {doc: {}};
     $scope.bLoading = false;
@@ -65,6 +65,16 @@ app.controller('mainCtrl', function($scope, $http, $httpParamSerializerJQLike) {
             }); 
         }
     };
+	
+	$scope.getReplicasNumber = function() {
+        $scope.bLoading = true;
+        $http.get($scope.baseUrl + "replicas").then(function(resp) {
+            $scope.replicasNumber = resp.data.replicas;
+            console.log(resp);
+        }).finally (function(){
+            $scope.bLoading = false;
+        });            
+    };
 
     /* Others */
     function syntaxHighlight(json) {
@@ -85,5 +95,7 @@ app.controller('mainCtrl', function($scope, $http, $httpParamSerializerJQLike) {
             return '<span class="' + cls + '">' + match + '</span>';
         });
     }
+	
+	$scope.getReplicasNumber();
     
 });
