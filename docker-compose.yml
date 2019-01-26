@@ -13,7 +13,7 @@ services:
      #numero di replicamanager gestiti dal dbmanager. Per aggiungere una replica basterà incrementare questo parametro
      #e aggiungere il relativo servizio in questo file seguendo la stessa convenzione (numeri nei nomi sequenziali) 
      - RABBITMQ_USERNAME=user
-     - RABBITMQ_USERNAME=bitnami
+     - RABBITMQ_PASSWORD=bitnami
     restart: always
 
   dbmanager:
@@ -25,7 +25,7 @@ services:
      #e aggiungere il relativo servizio in questo file seguendo la stessa convenzione (numeri nei nomi sequenziali) 
      - REPLICAS_NUMBER=5
      - RABBITMQ_USERNAME=user
-     - RABBITMQ_USERNAME=bitnami
+     - RABBITMQ_PASSWORD=bitnami
     depends_on:
      - replicamanager_1
      - replicamanager_2
