@@ -33,6 +33,7 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 /**
@@ -59,8 +60,10 @@ public class LoadGeneratorServlet extends HttpServlet {
         TestResult result;
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost("rabbitmq");
-        factory.setUsername("user");
-        factory.setPassword("bitnami");
+        Map<String, String> env = System.getenv();
+        factory.setUsername(env.get("RABBITMQ_USERNAME"));
+        factory.setPassword(env.get("RABBITMQ_PASSWORD"));
+        
         // Manipolazione del file system per il test
         try {
             Files.createDirectories(Paths.get("../TesterFiles"));
@@ -71,6 +74,7 @@ public class LoadGeneratorServlet extends HttpServlet {
             File file = new File("../TesterFiles/file_" + i + ".txt");
             file.createNewFile();     
         }    
+        
         RequestSenderService sender = new RequestSenderService();
         ExecutorService uploadThreadPool;
         ExecutorService downloadThreadPool;

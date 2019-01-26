@@ -14,6 +14,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,8 +36,9 @@ public class ResultReceiver {
         public ResultReceiver() throws IOException, TimeoutException{
             factory = new ConnectionFactory();
             factory.setHost("rabbitmq");
-            factory.setUsername("user");
-            factory.setPassword("bitnami");
+            Map<String, String> env = System.getenv();
+            factory.setUsername(env.get("RABBITMQ_USERNAME"));
+            factory.setPassword(env.get("RABBITMQ_PASSWORD"));
             connection = factory.newConnection();
             channel = connection.createChannel();
             transactionManager = TransactionManager.getInstance();

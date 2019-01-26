@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -37,12 +38,7 @@ public class TransactionManager {
     private int sequenceNumber = -1;
     
     private TransactionManager() {
-        replicaList = new ArrayList<String>();
-        replicaList.add("http://replicamanager_1:8080/");
-        replicaList.add("http://replicamanager_2:8080/");
-        replicaList.add("http://replicamanager_3:8080/");
-        replicaList.add("http://replicamanager_4:8080/");
-        replicaList.add("http://replicamanager_5:8080/");
+        initReplicaList();
     }
     
     public static TransactionManager getInstance() {
@@ -263,6 +259,21 @@ public class TransactionManager {
             Logger.getLogger(TransactionManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return myMap;
+    }
+
+    private void initReplicaList() {
+        Map<String, String> env = System.getenv();
+        int replicasNumber = Integer.parseInt(env.get("REPLICAS_NUMBER"));
+        replicaList = new ArrayList<String>();
+        for(int i = 1; i <= replicasNumber; i++ ){
+            replicaList.add("http://replicamanager_" + i + ":8080/");
+        }
+        System.out.println("ReplicaList:");
+        for(String s: replicaList){
+            System.out.println(s);
+        }
+        
+        return;
     }
 }
 
