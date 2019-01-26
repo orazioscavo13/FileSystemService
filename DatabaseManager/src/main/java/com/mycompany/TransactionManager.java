@@ -79,6 +79,15 @@ public class TransactionManager {
     }
     
     /**
+     * Return the number of replicas managed
+     * @param path the path of the drop replica manager REST
+     * @return string containing the outcome of the operation
+     */
+    public String getReplicas() {
+        return "{\"success\": true, \"replicas\": " + replicaList.size() + "}";
+    }
+    
+    /**
      * Strart a 2PC based write operation in the db
      * @param result the result data to be inserted in the new db entry
      * @param writePath the URI for the request to the db

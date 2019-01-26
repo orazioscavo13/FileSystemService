@@ -95,4 +95,15 @@ public class DatabaseManagerResource {
     public String twoPhaseCommitWrite(@FormParam("collection_name") String collectionName, @FormParam("directory") String directory, @FormParam("cycle") int cycle, @FormParam("mean_add") double meanAdd, @FormParam("mean_download") double meanDownload, @FormParam("stddev_add") double stdDevAdd, @FormParam("stddev_download") double stdDevDownload, @FormParam("state") int state, @FormParam("timestamp") String timestamp) {
         return transactionManager.twoPhaseCommitWrite(new TestResult(cycle, directory, meanAdd, meanDownload, stdDevAdd, stdDevDownload, state, timestamp), collectionName);
     }
+    
+    /**
+     * Retrieves the number of replicas managed
+     * @return the number of replicas managed
+     */
+    @GET
+    @Path("replicas")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getReplicasNumber() {
+        return transactionManager.getReplicas();
+    }
 }
