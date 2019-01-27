@@ -17,7 +17,10 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import static com.mongodb.client.model.Projections.excludeId;
 import static com.mongodb.client.model.Projections.fields;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -141,11 +144,27 @@ public class ReplicaResource {
             MongoCollection<Document> collection = database.getCollection(collectionName);
             FindIterable<Document> iterDoc = collection.find().projection(fields(excludeId()));
             Iterator it = iterDoc.iterator(); 
-
+            Document temp;
             String out = "";
             int count = 0;
-            while (it.hasNext()) { out = out + ((Document) it.next()).toJson() + (it.hasNext() ? ", " : ""); count++;}
-            ret = "{\"success\": true, \"number\":" + count + ", \"documents\": [" + out + "]}";
+            long maxTimestamp = 0;
+            Date date = null;
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd - HH:mm:ss");
+            dateFormat.setLenient(false);
+            while (it.hasNext()){ 
+                temp = (Document) it.next();
+                out = out + temp.toJson() + (it.hasNext() ? ", " : ""); 
+                try {
+                    date = dateFormat.parse((String) temp.get("timestamp"));
+                    if(date.getTime() > maxTimestamp){
+                        maxTimestamp = date.getTime();
+                    }
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
+                }
+                count++;
+            }
+            ret = "{\"success\": true, \"maxTimestamp\": " + maxTimestamp + ", \"number\":" + count + ", \"documents\": [" + out + "]}";
         } else
             ret = SUCCESS_FALSE;
         
@@ -180,7 +199,17 @@ public class ReplicaResource {
             FindIterable<Document> iterDoc = collection.find(new BasicDBObject()).sort(new BasicDBObject("_id", -1)).projection(fields(excludeId()));
             Iterator it = iterDoc.iterator();
             if(it.hasNext()) { 
-                ret = "{\"success\": true, \"lastCommittedDocument\": " + ((Document) it.next()).toJson() + "}";
+                Document temp = (Document) it.next();
+                Date date = null;
+                try {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd - HH:mm:ss");
+                    dateFormat.setLenient(false);
+                    date = dateFormat.parse((String) temp.get("timestamp"));
+                    ret = "{\"success\": true, \"number\": 1,\"maxTimestamp\": " + date.getTime() + ", \"lastCommittedDocument\": " + temp.toJson() + "}";
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
+                    ret = SUCCESS_FALSE;
+                }
             } else
                 ret = SUCCESS_FALSE;
         } else

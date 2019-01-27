@@ -72,7 +72,6 @@ public class TestResult implements Serializable{
     /**
      * 
      * @return Serialized Object as a byte
-     * @throws java.io.IOException
      */
     public byte[] serialize() throws IOException{
         ByteArrayOutputStream bos = new ByteArrayOutputStream();

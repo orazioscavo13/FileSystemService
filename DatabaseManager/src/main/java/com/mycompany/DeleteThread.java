@@ -35,7 +35,6 @@ public class DeleteThread implements Callable<String> {
     /**
      * Sends a DELETE request to a single replica manager and waits for response within a specified timeout
      * @return String contining the outcome of the operations
-     * @throws java.lang.Exception
      */
     @Override
     public String call() throws Exception {

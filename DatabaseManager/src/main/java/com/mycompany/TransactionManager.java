@@ -8,8 +8,10 @@ package com.mycompany;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -52,7 +54,7 @@ public class TransactionManager {
      * sends a GET request to all replicas to get the max sequence number in use in their log files and sets the sequence number property according to it
      */
     public void setSequenceNumber() {
-        ArrayList<String> resultList = sendThreads(null, "logfile/maxSequenceNumber", REQUEST_GET);
+        ArrayList<String> resultList = sendThreads(null, "logfile/maxSequenceNumber", REQUEST_GET, false);
         int maxSeqNum = 0;
         int seqNum = 0;
         for(int i=0; i<resultList.size(); i++) {
@@ -72,15 +74,14 @@ public class TransactionManager {
      */
     public String dropCollections(String path) {
         // Prima fase
-        ArrayList<String> resultList = sendThreads(null, path, REQUEST_DELETE);
+        ArrayList<String> resultList = sendThreads(null, path, REQUEST_DELETE, false);
         
         // Seconda fase
-        return readQuorumDecision(resultList);
+        return deleteQuorumDecision(resultList);
     }
     
     /**
      * Return the number of replicas managed
-     * @param path the path of the drop replica manager REST
      * @return string containing the outcome of the operation
      */
     public String getReplicas() {
@@ -88,7 +89,7 @@ public class TransactionManager {
     }
     
     /**
-     * Strart a 2PC based write operation in the db
+     * Start a 2PC based write operation in the db
      * @param result the result data to be inserted in the new db entry
      * @param writePath the URI for the request to the db
      * @return string containing the outcome of the operation
@@ -99,49 +100,83 @@ public class TransactionManager {
         }
         sequenceNumber++;
         // Prima fase
-        ArrayList<String> resultList = sendThreads(result, writePath, REQUEST_POST);
+        ArrayList<String> resultList = sendThreads(result, writePath, REQUEST_POST, false);
         
         // Seconda fase
         return writeQuorumDecision(resultList);
     }
     
     /**
-     * Strart a quorum read operation in the db
+     * Start a quorum read operation in the db
      * @param readPath the URI to use for the request to the db
      * @return The value read through the quorum protocol
      */
     public String quorumRead(String readPath) {
         // Prima fase
-        ArrayList<String> resultList = sendThreads(null, readPath, REQUEST_GET);
+        ArrayList<String> resultList = sendThreads(null, readPath, REQUEST_GET, true);
         
         // Seconda fase
         return readQuorumDecision(resultList);
     }
     
     /**
+     * Select randomly a number of replicas equals to the quorum for quorum read
+     * @return the list of selected replicas
+     */
+    ArrayList<String> selectReplicas(){
+        ArrayList<String> ret = new ArrayList<String>();
+        int []mask = new int[replicaList.size()];
+        Arrays.fill(mask, 0);
+        Random generator = new Random();
+        int count = 0;
+        
+        while(count <= replicaList.size()/2){
+            int rand = generator.nextInt(replicaList.size());
+            if(mask[rand] == 0){
+                mask[rand] = 1;
+                ret.add(replicaList.get(rand));
+                count++;
+            }
+        }
+        
+        return ret;
+    }
+    
+    /**
      * Creates one thread for each db replica to send a request
+     * @param requestType request method
+     * @param isRead this flag is true if a quorum read is starting
      * @param result the result data to be inserted in the db
      * @param path the URI for the request to the db
      * @return List containing the results collected from all replicas
+     * @return 
      */
-    public ArrayList<String> sendThreads (TestResult result, String path, String requestType){
+    public ArrayList<String> sendThreads (TestResult result, String path, String requestType, boolean isRead){
         String url = BASIC_RESOURCE_IDENTIFIER + "collections" + (result == null ? ("/" + path) : "");
         ArrayList<Callable<String>> threadList = new ArrayList<Callable<String>>();
-        ExecutorService threadPoolService = Executors.newFixedThreadPool(replicaList.size());
         ArrayList<String> resultList = new ArrayList<String>();
+        ArrayList<String> selectedReplicaList = new ArrayList<String>();
         
-        // Esegue replicaList.size() thread in parallelo, ognuno dei quali invia una richiesta GET/POST/DELETE ad un replica manager diverso
-        for(int i=0; i<replicaList.size(); i++) {
+        if(isRead == false){
+            selectedReplicaList = replicaList;
+        }else{
+            selectedReplicaList = selectReplicas();
+        }
+        
+        ExecutorService threadPoolService = Executors.newFixedThreadPool(selectedReplicaList.size());
+        
+        // Esegue selectedReplicaList.size() thread in parallelo, ognuno dei quali invia una richiesta GET/POST/DELETE ad un replica manager diverso
+        for(int i=0; i<selectedReplicaList.size(); i++) {
             try {
                 switch(requestType){
                     case REQUEST_GET:
-                        threadList.add(new GetThread(replicaList.get(i) + url, TIMEOUT));
+                        threadList.add(new GetThread(selectedReplicaList.get(i) + url, TIMEOUT));
                         break;
                     case REQUEST_POST:
-                        threadList.add(new PostThread(replicaList.get(i) + url, TIMEOUT, result, sequenceNumber, path));
+                        threadList.add(new PostThread(selectedReplicaList.get(i) + url, TIMEOUT, result, sequenceNumber, path));
                         break;
                     case REQUEST_DELETE:
-                        threadList.add(new DeleteThread(replicaList.get(i) + url, DROP_TIMEOUT));
+                        threadList.add(new DeleteThread(selectedReplicaList.get(i) + url, DROP_TIMEOUT));
                         break;
                 }
             } catch (Exception ex) {
@@ -152,7 +187,7 @@ public class TransactionManager {
         try {
             ArrayList<Future<String>> futures = (ArrayList<Future<String>>) threadPoolService.invokeAll(threadList);
             awaitTerminationAfterShutDown(threadPoolService);
-            for(int j=0; j<replicaList.size(); j++) {
+            for(int j=0; j<selectedReplicaList.size(); j++) {
                 resultList.add(futures.get(j).get());
             }
         } catch (InterruptedException | ExecutionException ex) {
@@ -220,6 +255,41 @@ public class TransactionManager {
      * @return the string which have reached the quorum, else an error 
      */
     public String readQuorumDecision(ArrayList<String> resultList) {
+        long max = -1;
+        int index = -1;
+        boolean flag = false;
+        HashMap<String, Object> object = null;
+        
+        for(int i=0; i<resultList.size(); i++) {
+            object = parseJSON(resultList.get(i));
+            if((boolean)object.get("success")) {
+                flag = true;
+                if((int)object.get("number") > 0){
+                    if((long)object.get("maxTimestamp") > max){
+                        max = (long)object.get("maxTimestamp");
+                        index = i;
+                    } 
+                }   
+            }
+        }
+        
+        if(index != -1){
+            return resultList.get(index);
+        }else{
+            if(flag == true){
+                return resultList.get(0);
+            }else{
+                return SUCCESS_FALSE;
+            }
+        }
+    }
+    
+    /**
+     * Scans collected result to reach a delete quorum
+     * @param resultList collected results from quorum delete
+     * @return the string which have reached the quorum, else an error 
+     */
+    public String deleteQuorumDecision(ArrayList<String> resultList) {
         int count;
         
         for(int i=0; i<resultList.size(); i++) {
